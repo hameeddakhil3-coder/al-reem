@@ -149,7 +149,7 @@ create table if not exists public.bookings (
 comment on table public.bookings is 'طلب حجز يخضع لمراجعة بشرية؛ إنشاء الطلب لا يعني إصدار تذكرة أو تأكيد الحجز.';
 comment on column public.bookings.reference_code is 'رقم مرجعي فريد يُولّد بطريقة موثوقة من الخادم قبل إنشاء الطلب.';
 
-// يولّد الخادم الرقم المرجعي بنفسه حتى لا يستطيع العميل فرض رقم أو انتحال رقم حجز آخر.
+-- يولّد الخادم الرقم المرجعي بنفسه حتى لا يستطيع العميل فرض رقم أو انتحال رقم حجز آخر.
 create or replace function public.generate_booking_reference_code()
 returns trigger
 language plpgsql
