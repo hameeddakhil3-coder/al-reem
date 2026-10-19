@@ -19,7 +19,7 @@ const translations = {
     contactKicker:"نحن هنا للمساعدة",contactTitle:"لديك سؤال عن رحلتك؟",contactText:"سيتم تفعيل قنوات التواصل الفعلية عند إعداد بيانات الاتصال الرسمية.",contactButton:"قريبًا — قنوات التواصل",
     footerText:"نخطط لتجربة سفر أكثر وضوحًا، خطوة بخطوة.",footerDisclaimer:"نسخة تأسيسية قيد التطوير — لا توجد حجوزات فعلية بعد.",
     requestKicker:"ملخص طلبك",dialogTitle:"تفاصيل الرحلة",dialogNotice:"هذه معاينة محلية فقط. لم يُرسل طلب ولم يتم الاتصال بمزود طيران.",dialogDone:"حسنًا",
-    missingFields:"يرجى إدخال مدينة المغادرة والوصول وتاريخ المغادرة.",sameCity:"يرجى اختيار مدينتين مختلفتين.",badReturn:"يجب أن يكون تاريخ العودة في يوم المغادرة أو بعده.",round:"ذهاب وعودة",oneway:"ذهاب فقط",
+    missingFields:"يرجى إدخال مدينة المغادرة والوصول وتاريخ المغادرة.",pastDeparture:"لا يمكن اختيار تاريخ مغادرة سابق لليوم.",sameCity:"يرجى اختيار مدينتين مختلفتين.",badReturn:"يجب أن يكون تاريخ العودة في يوم المغادرة أو بعده.",round:"ذهاب وعودة",oneway:"ذهاب فقط",
     summaryFrom:"المغادرة من",summaryTo:"الوصول إلى",summaryDepart:"تاريخ المغادرة",summaryReturn:"تاريخ العودة",summaryPassengers:"عدد المسافرين",summaryCabin:"درجة السفر"
   },
   en: {
@@ -37,7 +37,7 @@ const translations = {
     contactKicker:"We're here to help",contactTitle:"Have a question about your trip?",contactText:"Live contact channels will be enabled once official contact details are configured.",contactButton:"Coming soon — contact channels",
     footerText:"A clearer travel experience, one step at a time.",footerDisclaimer:"Foundational preview under development — no live bookings yet.",
     requestKicker:"Your request summary",dialogTitle:"Trip details",dialogNotice:"This is a local preview only. Nothing was submitted and no flight provider was contacted.",dialogDone:"Got it",
-    missingFields:"Please enter departure city, arrival city and departure date.",sameCity:"Please choose two different cities.",badReturn:"The return date must be on or after the departure date.",round:"Round trip",oneway:"One way",
+    missingFields:"Please enter departure city, arrival city and departure date.",pastDeparture:"Departure date cannot be in the past.",sameCity:"Please choose two different cities.",badReturn:"The return date must be on or after the departure date.",round:"Round trip",oneway:"One way",
     summaryFrom:"From",summaryTo:"To",summaryDepart:"Departure",summaryReturn:"Return",summaryPassengers:"Travelers",summaryCabin:"Cabin"
   }
 };
@@ -95,6 +95,15 @@ function handleFlightSearch(event) {
     if (!origin) originInput.setAttribute("aria-invalid", "true");
     if (!destination) destinationInput.setAttribute("aria-invalid", "true");
     if (!departDate) departInput.setAttribute("aria-invalid", "true");
+    return;
+  }
+  // لا نعتمد على خاصية min في المتصفح وحدها؛ لأن النموذج يستخدم تحققًا مخصصًا.
+  // نعيد التحقق هنا حتى لا تمر تواريخ ماضية عند تجاوز تحقق HTML الافتراضي.
+  const now = new Date();
+  const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  if (departDate < today) {
+    message.textContent = dictionary.pastDeparture;
+    departInput.setAttribute("aria-invalid", "true");
     return;
   }
   if (origin.toLocaleLowerCase() === destination.toLocaleLowerCase()) {
