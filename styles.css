@@ -22,3 +22,8 @@ html[dir="ltr"] .hero-note{justify-self:start;border-inline-start:0;border-inlin
 .brand-logo-footer{width:42px;height:42px;flex-basis:42px;}
 .brand{display:inline-flex;align-items:center;gap:10px;}
 @media(max-width:600px){.brand-logo{width:38px;height:38px;flex-basis:38px;}.brand-logo-footer{width:40px;height:40px;flex-basis:40px;}}
+
+
+/* Homepage layout update: put the existing flight search directly below the header. */
+.search-section{position:relative;padding:24px 0 30px;background:linear-gradient(180deg,#fff 0%,#fbf5f6 100%)}
+.search-section .search-container{margin-top:0}
