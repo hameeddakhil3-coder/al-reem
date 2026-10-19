@@ -148,6 +148,24 @@ create table if not exists public.bookings (
 
 comment on table public.bookings is 'طلب حجز يخضع لمراجعة بشرية؛ إنشاء الطلب لا يعني إصدار تذكرة أو تأكيد الحجز.';
 comment on column public.bookings.reference_code is 'رقم مرجعي فريد يُولّد بطريقة موثوقة من الخادم قبل إنشاء الطلب.';
+
+// يولّد الخادم الرقم المرجعي بنفسه حتى لا يستطيع العميل فرض رقم أو انتحال رقم حجز آخر.
+create or replace function public.generate_booking_reference_code()
+returns trigger
+language plpgsql
+set search_path = ''
+as $
+begin
+  new.reference_code := 'AR-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 12));
+  return new;
+end;
+$;
+
+comment on function public.generate_booking_reference_code() is 'ينشئ رقماً مرجعياً للحجز داخل قاعدة البيانات بدلاً من قبول قيمة يرسلها المتصفح.';
+drop trigger if exists bookings_generate_reference_code on public.bookings;
+create trigger bookings_generate_reference_code
+before insert on public.bookings
+for each row execute function public.generate_booking_reference_code();
 comment on column public.bookings.admin_notes is 'ملاحظات داخلية للإدارة لا يجوز كشفها للمستخدم.';
 comment on column public.bookings.status is 'الحالة الحالية للطلب؛ يجب أن تمر التغييرات عبر منطق خادمي يتحقق من انتقال الحالة ويسجل التاريخ.';
 
