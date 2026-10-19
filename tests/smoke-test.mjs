@@ -55,8 +55,6 @@ assert.doesNotMatch(migration, /\bas \$(?!\$)/i,
   "يجب استخدام محددات صحيحة لنصوص الدوال في SQL");
 assert.doesNotMatch(migration, /^\$;$/m,
   "يجب إغلاق نصوص الدوال باستخدام محددات الدولار المزدوجة");
-assert.doesNotMatch(migration, /^\$;$/m,
-  "يجب إغلاق نصوص الدوال باستخدام محددات الدولار المزدوجة");
 const paymentsTablePosition = migration.indexOf("create table if not exists public.payments");
 const updatedAtTriggerPosition = migration.indexOf("create trigger profiles_set_updated_at");
 assert.ok(paymentsTablePosition >= 0 && updatedAtTriggerPosition > paymentsTablePosition,
