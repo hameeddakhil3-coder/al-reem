@@ -3,7 +3,6 @@
   "name": "al-reem",
   "compatibility_date": "2026-10-19",
   "assets": {
-    "directory": "./public",
-    "binding": "ASSETS"
+    "directory": "./public"
   }
 }
