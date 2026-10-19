@@ -33,6 +33,8 @@ assert.match(js, /departure date cannot be in the past|لا يمكن اختيا�
 
 // يتحقق من وجود أساسيات الأمان في مسودة SQL، وليس من صلاحيتها التشغيلية.
 assert.match(migration, /enable row level security;/i, "يجب تفعيل RLS على الجداول المناسبة");
+assert.match(migration, /grant execute on function public\.has_role\(text\) to anon, authenticated;/i,
+  "يجب السماح للزائر بتقييم سياسات المحتوى العام دون خطأ صلاحيات");
 assert.match(migration, /bookings_guard_status_change|guard_booking_status_change/i,
   "يجب وجود تحقق من انتقالات حالة الحجز");
 assert.match(migration, /booking_status_history/i, "يجب وجود سجل تاريخ حالات الحجز");
