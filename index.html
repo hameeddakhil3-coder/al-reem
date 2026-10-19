@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#850d24">
+  <link rel="icon" type="image/svg+xml" href="./assets/gazelle-mark.svg">
   <meta name="description" content="AL Reem — رحلتك تبدأ بخطوة. ابحث عن رحلتك وجهّز طلب الحجز بسهولة.">
   <title>AL Reem | رحلتك تبدأ هنا</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +18,7 @@
   <header class="site-header">
     <div class="container nav-wrap">
       <a class="brand" href="#home" aria-label="AL Reem home">
-        
+        <img class="brand-logo" src="./assets/gazelle-mark.svg" alt="شعار الغزال AL Reem" width="46" height="46">
         <span class="brand-copy"><strong>AL REEM</strong><small data-i18n="brandTag">رحلتك تبدأ هنا</small></span>
       </a>
       <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة" aria-expanded="false">☰</button>
@@ -26,6 +27,7 @@
         <a href="#search" data-i18n="navFlights">الرحلات</a>
         <a href="#destinations" data-i18n="navDestinations">الوجهات</a>
         <a href="#why-us" data-i18n="navAbout">لماذا AL Reem؟</a>
+        <a href="#faq" data-i18n="navFaq">الأسئلة الشائعة</a>
       </nav>
       <div class="nav-actions">
         <button class="language-switch" id="languageToggle" type="button" aria-label="Switch language">EN</button>
@@ -46,6 +48,7 @@
             <span><i aria-hidden="true">✓</i><span data-i18n="pointOne">خطوات واضحة</span></span>
             <span><i aria-hidden="true">✓</i><span data-i18n="pointTwo">متابعة بشرية للطلبات</span></span>
           </div>
+          <a class="button button-primary hero-cta" href="#search"><span data-i18n="heroCta">ابدأ البحث عن رحلتك</span><span aria-hidden="true">↙</span></a>
         </div>
         <aside class="hero-note" aria-label="Travel note">
           <span class="note-kicker" data-i18n="noteKicker">مساحة جديدة لاكتشاف العالم</span>
@@ -137,14 +140,25 @@
       </div>
     </section>
 
+    <section class="section faq-section" id="faq">
+      <div class="container faq-grid">
+        <div class="faq-intro"><span class="section-kicker" data-i18n="faqKicker">قبل أن تبدأ</span><h2 data-i18n="faqTitle">أسئلة تساعدك على التخطيط بثقة</h2><p data-i18n="faqIntro">إجابات واضحة عن آلية الطلب وما يعنيه إرسال بيانات الرحلة في هذه المرحلة.</p></div>
+        <div class="faq-list">
+          <details class="faq-item"><summary data-i18n="faqOneQ">هل إرسال الطلب يعني أن التذكرة تأكدت؟</summary><p data-i18n="faqOneA">لا. إرسال النموذج لا يحجز مقعدًا ولا يصدر تذكرة. يظل الطلب بحاجة إلى مراجعة وتأكيد منفصل.</p></details>
+          <details class="faq-item"><summary data-i18n="faqTwoQ">كيف تتم مراجعة طلب الرحلة؟</summary><p data-i18n="faqTwoA">في المرحلة الحالية، آلية الخدمة مصممة للمراجعة اليدوية. لا يُعد هذا النموذج إرسالًا فعليًا إلى فريق الدعم بعد.</p></details>
+          <details class="faq-item"><summary data-i18n="faqThreeQ">هل الأسعار والتوافر المعروضان حقيقيان؟</summary><p data-i18n="faqThreeA">لا يعرض الموقع حاليًا أسعارًا أو توافرًا مباشرًا من شركات الطيران. بطاقات الوجهات للإلهام فقط.</p></details>
+        </div>
+      </div>
+    </section>
+
     <section class="contact-strip" id="contact">
-      <div class="container contact-inner"><div><span class="section-kicker" data-i18n="contactKicker">نحن هنا للمساعدة</span><h2 data-i18n="contactTitle">لديك سؤال عن رحلتك؟</h2><p data-i18n="contactText">سيتم تفعيل قنوات التواصل الفعلية عند إعداد بيانات الاتصال الرسمية.</p></div><a class="button button-light" href="mailto:"> <span data-i18n="contactButton">قريبًا — قنوات التواصل</span><span aria-hidden="true">↗</span></a></div>
+      <div class="container contact-inner"><div><span class="section-kicker" data-i18n="contactKicker">نحن هنا للمساعدة</span><h2 data-i18n="contactTitle">لديك سؤال عن رحلتك؟</h2><p data-i18n="contactText">سيتم تفعيل قنوات التواصل الفعلية عند إعداد بيانات الاتصال الرسمية.</p></div><a class="button button-light" href="#faq"><span data-i18n="contactButton">اطّلع على الأسئلة الشائعة</span><span aria-hidden="true">↗</span></a></div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-top"><a class="brand brand-footer" href="#home"><span class="brand-copy"><strong>AL REEM</strong><small data-i18n="brandTag">رحلتك تبدأ هنا</small></span></a><p data-i18n="footerText">نخطط لتجربة سفر أكثر وضوحًا، خطوة بخطوة.</p><span class="footer-word">TRAVEL, WITH CLARITY.</span></div>
-    <div class="container footer-bottom"><span>© <span id="year"></span> AL Reem</span><span data-i18n="footerDisclaimer">نسخة تأسيسية قيد التطوير — لا توجد حجوزات فعلية بعد.</span></div>
+    <div class="container footer-top"><a class="brand brand-footer" href="#home"><img class="brand-logo brand-logo-footer" src="./assets/gazelle-mark.svg" alt="شعار الغزال AL Reem" width="42" height="42"><span class="brand-copy"><strong>AL REEM</strong><small data-i18n="brandTag">رحلتك تبدأ هنا</small></span></a><p data-i18n="footerText">نخطط لتجربة سفر أكثر وضوحًا، خطوة بخطوة.</p><span class="footer-word">TRAVEL, WITH CLARITY.</span></div>
+    <div class="container footer-bottom"><span>© <span id="year"></span> AL Reem</span><a href="#faq" data-i18n="footerHelp">المساعدة والأسئلة الشائعة</a><span data-i18n="footerDisclaimer">نسخة تأسيسية قيد التطوير — لا توجد حجوزات فعلية بعد.</span></div>
   </footer>
   <dialog class="request-dialog" id="requestDialog" aria-labelledby="dialogTitle">
     <div class="dialog-inner"><button class="dialog-close" id="dialogClose" aria-label="إغلاق">×</button><span class="section-kicker" data-i18n="requestKicker">ملخص طلبك</span><h2 id="dialogTitle" data-i18n="dialogTitle">تفاصيل الرحلة</h2><p id="dialogSummary"></p><div class="dialog-notice" data-i18n="dialogNotice">هذه معاينة محلية فقط. لم يُرسل طلب ولم يتم الاتصال بمزود طيران.</div><button class="button button-primary" id="dialogDone" data-i18n="dialogDone">حسنًا</button></div>
