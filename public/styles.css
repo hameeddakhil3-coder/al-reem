@@ -18,5 +18,5 @@ html[dir="ltr"] .hero-note{justify-self:start;border-inline-start:0;border-inlin
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
 /* Homepage layout update: put the existing flight search directly below the header. */
-.search-section{position:relative;padding:24px 0 30px;background:linear-gradient(180deg,#fff 0%,#fbf5f6 100%)}
+.search-section{position:relative;padding:24px 0 30px;background:linear-gradient(180deg,#f8e9ed 0%,#f3dce2 100%)}
 .search-section .search-container{margin-top:0}
