@@ -1,0 +1,23 @@
+name: Static smoke tests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-test:
+    name: Validate static files and SQL safeguards
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run smoke tests
+        run: node tests/smoke-test.mjs

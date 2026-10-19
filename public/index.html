@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#850d24">
+  <meta name="description" content="AL Reem — رحلتك تبدأ بخطوة. ابحث عن رحلتك وجهّز طلب الحجز بسهولة.">
+  <title>AL Reem | رحلتك تبدأ هنا</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">تجاوز إلى المحتوى</a>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#home" aria-label="AL Reem home">
+        
+        <span class="brand-copy"><strong>AL REEM</strong><small data-i18n="brandTag">رحلتك تبدأ هنا</small></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+      <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+        <a href="#home" data-i18n="navHome">الرئيسية</a>
+        <a href="#search" data-i18n="navFlights">الرحلات</a>
+        <a href="#destinations" data-i18n="navDestinations">الوجهات</a>
+        <a href="#why-us" data-i18n="navAbout">لماذا AL Reem؟</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="language-switch" id="languageToggle" type="button" aria-label="Switch language">EN</button>
+        <a class="button button-outline button-small" href="#contact" data-i18n="navContact">تواصل معنا</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="home">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow"><span class="eyebrow-dot"></span><span data-i18n="eyebrow">خطّط لرحلتك بثقة</span></span>
+          <h1 data-i18n="heroTitle">العالم أقرب<br><em>مما تتخيّل.</em></h1>
+          <p class="hero-description" data-i18n="heroDescription">ابدأ رحلتك القادمة بتجربة بحث بسيطة وواضحة، ودع فريق AL Reem يساعدك في متابعة طلب الحجز.</p>
+          <div class="hero-points">
+            <span><i aria-hidden="true">✓</i><span data-i18n="pointOne">خطوات واضحة</span></span>
+            <span><i aria-hidden="true">✓</i><span data-i18n="pointTwo">متابعة بشرية للطلبات</span></span>
+          </div>
+        </div>
+        <aside class="hero-note" aria-label="Travel note">
+          <span class="note-kicker" data-i18n="noteKicker">مساحة جديدة لاكتشاف العالم</span>
+          <div class="note-line"></div>
+          <p data-i18n="noteText">رحلتك مهمة. نعمل على جعل التخطيط لها أكثر سهولة ووضوحًا.</p>
+          <span class="note-signature">AL REEM <span>·</span> TRAVEL</span>
+        </aside>
+      </div>
+      <div class="container search-container" id="search">
+        <div class="search-card">
+          <div class="search-heading">
+            <div>
+              <span class="section-kicker" data-i18n="searchKicker">ابدأ من هنا</span>
+              <h2 data-i18n="searchTitle">إلى أين تأخذك رحلتك؟</h2>
+            </div>
+            <span class="manual-badge"><span></span><span data-i18n="manualBadge">طلب حجز بمراجعة يدوية</span></span>
+          </div>
+          <form id="flightSearchForm" novalidate>
+            <fieldset class="trip-type">
+              <legend class="visually-hidden" data-i18n="tripType">نوع الرحلة</legend>
+              <label class="radio-pill"><input type="radio" name="tripType" value="round" checked><span data-i18n="roundTrip">ذهاب وعودة</span></label>
+              <label class="radio-pill"><input type="radio" name="tripType" value="oneway"><span data-i18n="oneWay">ذهاب فقط</span></label>
+            </fieldset>
+            <div class="search-fields">
+              <label class="field">
+                <span data-i18n="fromLabel">من</span>
+                <input id="origin" name="origin" autocomplete="off" required placeholder="مدينة أو مطار المغادرة" data-i18n-placeholder="fromPlaceholder">
+              </label>
+              <div class="route-swap" aria-hidden="true">⇄</div>
+              <label class="field">
+                <span data-i18n="toLabel">إلى</span>
+                <input id="destination" name="destination" autocomplete="off" required placeholder="مدينة أو مطار الوصول" data-i18n-placeholder="toPlaceholder">
+              </label>
+              <label class="field">
+                <span data-i18n="departLabel">تاريخ المغادرة</span>
+                <input id="departDate" name="departDate" type="date" required>
+              </label>
+              <label class="field" id="returnField">
+                <span data-i18n="returnLabel">تاريخ العودة</span>
+                <input id="returnDate" name="returnDate" type="date">
+              </label>
+              <label class="field field-passengers">
+                <span data-i18n="passengersLabel">المسافرون</span>
+                <select name="passengers" id="passengers">
+                  <option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6+</option>
+                </select>
+              </label>
+              <label class="field">
+                <span data-i18n="cabinLabel">درجة السفر</span>
+                <select name="cabin" id="cabin">
+                  <option value="economy" data-i18n="economy">اقتصادية</option>
+                  <option value="business" data-i18n="business">رجال الأعمال</option>
+                  <option value="first" data-i18n="first">الأولى</option>
+                </select>
+              </label>
+            </div>
+            <div class="search-footer">
+              <p class="form-message" id="formMessage" role="status" aria-live="polite" data-i18n="formHint">هذا النموذج يجهّز طلب بحث فقط؛ لم يتم ربط مزود رحلات حتى الآن.</p>
+              <button class="button button-primary search-submit" type="submit"><span data-i18n="searchButton">متابعة طلب الرحلة</span><span aria-hidden="true">↗</span></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="section destinations-section" id="destinations">
+      <div class="container">
+        <div class="section-heading">
+          <div><span class="section-kicker" data-i18n="destKicker">أفكار لرحلتك القادمة</span><h2 data-i18n="destTitle">العالم ينتظرك</h2></div>
+          <p data-i18n="destDescription">وجهات ملهمة لبداية التخطيط. هذه بطاقات تصميمية وليست عروضًا أو أسعارًا متاحة للحجز.</p>
+        </div>
+        <div class="destination-grid">
+          <article class="destination-card destination-istanbul"><div class="destination-overlay"></div><div class="destination-content"><span data-i18n="destLabel">وجهة للإلهام</span><h3 data-i18n="istanbul">إسطنبول</h3><p data-i18n="istanbulDesc">بين التاريخ والحياة الحديثة</p></div><span class="destination-number">01</span></article>
+          <article class="destination-card destination-dubai"><div class="destination-overlay"></div><div class="destination-content"><span data-i18n="destLabel">وجهة للإلهام</span><h3 data-i18n="dubai">دبي</h3><p data-i18n="dubaiDesc">تجارب مدينة لا تتوقف</p></div><span class="destination-number">02</span></article>
+          <article class="destination-card destination-paris"><div class="destination-overlay"></div><div class="destination-content"><span data-i18n="destLabel">وجهة للإلهام</span><h3 data-i18n="paris">باريس</h3><p data-i18n="parisDesc">فنّ وثقافة وأجواء مميزة</p></div><span class="destination-number">03</span></article>
+        </div>
+        <p class="demo-disclaimer" data-i18n="destDisclaimer">الوجهات أعلاه أمثلة تصميمية؛ لا تمثل توافر رحلات أو عروض فعلية.</p>
+      </div>
+    </section>
+
+    <section class="section why-section" id="why-us">
+      <div class="container why-grid">
+        <div><span class="section-kicker" data-i18n="whyKicker">تجربة أوضح من البداية</span><h2 data-i18n="whyTitle">كل خطوة<br><em>لها معنى.</em></h2></div>
+        <div class="benefit-list">
+          <article class="benefit"><span class="benefit-index">01</span><div><h3 data-i18n="benefitOneTitle">بحث بسيط ومنظم</h3><p data-i18n="benefitOneText">أدخل تفاصيل رحلتك في نموذج واضح، دون خطوات غير ضرورية.</p></div></article>
+          <article class="benefit"><span class="benefit-index">02</span><div><h3 data-i18n="benefitTwoTitle">مراجعة بشرية للطلب</h3><p data-i18n="benefitTwoText">في المرحلة الأولى، تتم مراجعة الطلبات يدويًا ولا يُعد إرسال الطلب تذكرة مؤكدة.</p></div></article>
+          <article class="benefit"><span class="benefit-index">03</span><div><h3 data-i18n="benefitThreeTitle">معلومات واضحة</h3><p data-i18n="benefitThreeText">نوضح ما هو متاح فعليًا وما يحتاج إلى تأكيد قبل اتخاذ القرار.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-strip" id="contact">
+      <div class="container contact-inner"><div><span class="section-kicker" data-i18n="contactKicker">نحن هنا للمساعدة</span><h2 data-i18n="contactTitle">لديك سؤال عن رحلتك؟</h2><p data-i18n="contactText">سيتم تفعيل قنوات التواصل الفعلية عند إعداد بيانات الاتصال الرسمية.</p></div><a class="button button-light" href="mailto:"> <span data-i18n="contactButton">قريبًا — قنوات التواصل</span><span aria-hidden="true">↗</span></a></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-top"><a class="brand brand-footer" href="#home"><span class="brand-copy"><strong>AL REEM</strong><small data-i18n="brandTag">رحلتك تبدأ هنا</small></span></a><p data-i18n="footerText">نخطط لتجربة سفر أكثر وضوحًا، خطوة بخطوة.</p><span class="footer-word">TRAVEL, WITH CLARITY.</span></div>
+    <div class="container footer-bottom"><span>© <span id="year"></span> AL Reem</span><span data-i18n="footerDisclaimer">نسخة تأسيسية قيد التطوير — لا توجد حجوزات فعلية بعد.</span></div>
+  </footer>
+  <dialog class="request-dialog" id="requestDialog" aria-labelledby="dialogTitle">
+    <div class="dialog-inner"><button class="dialog-close" id="dialogClose" aria-label="إغلاق">×</button><span class="section-kicker" data-i18n="requestKicker">ملخص طلبك</span><h2 id="dialogTitle" data-i18n="dialogTitle">تفاصيل الرحلة</h2><p id="dialogSummary"></p><div class="dialog-notice" data-i18n="dialogNotice">هذه معاينة محلية فقط. لم يُرسل طلب ولم يتم الاتصال بمزود طيران.</div><button class="button button-primary" id="dialogDone" data-i18n="dialogDone">حسنًا</button></div>
+  </dialog>
+</body>
+</html>
