@@ -17,6 +17,10 @@ const migration = readFileSync(
   new URL("../supabase/migrations/202610190001_initial_schema.sql", import.meta.url),
   "utf8"
 );
+const publicHtml = readFileSync(new URL("../public/index.html", import.meta.url), "utf8");
+const publicCss = readFileSync(new URL("../public/styles.css", import.meta.url), "utf8");
+const publicJs = readFileSync(new URL("../public/app.js", import.meta.url), "utf8");
+const wrangler = readFileSync(new URL("../wrangler.jsonc", import.meta.url), "utf8");
 
 // يتحقق من أن العناصر الرئيسية والملفات المرتبطة بها موجودة في الصفحة.
 assert.match(html, /<html lang="ar" dir="rtl">/, "يجب أن تبدأ الصفحة بالعربية وباتجاه RTL");
@@ -24,6 +28,11 @@ assert.match(html, /id="flightSearchForm"/, "نموذج البحث عن الرح
 assert.match(html, /id="languageToggle"/, "زر تبديل اللغة مطلوب");
 assert.match(html, /\.\/styles\.css/, "يجب ربط ملف التنسيقات");
 assert.match(html, /\.\/app\.js/, "يجب ربط ملف التفاعل");
+
+assert.equal(publicHtml, html, "يجب أن تطابق نسخة public صفحة الجذر");
+assert.equal(publicCss, css, "يجب أن تطابق نسخة public ملف التنسيق");
+assert.equal(publicJs, js, "يجب أن تطابق نسخة public ملف التفاعل");
+assert.match(wrangler, /"directory": "\\.\/public"/, "يجب توجيه Wrangler إلى مجلد الأصول العامة");
 
 // يمنع الاختبار اعتبار نموذج البحث اتصالًا فعليًا بمزود طيران في هذه المرحلة.
 assert.match(html, /مراجعة يدوية|manualBadge/, "يجب توضيح أن الطلب يخضع لمراجعة يدوية");
