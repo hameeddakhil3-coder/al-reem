@@ -154,12 +154,12 @@ create or replace function public.generate_booking_reference_code()
 returns trigger
 language plpgsql
 set search_path = ''
-as $
+as $$
 begin
   new.reference_code := 'AR-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 12));
   return new;
 end;
-$;
+$$;
 
 comment on function public.generate_booking_reference_code() is 'ينشئ رقماً مرجعياً للحجز داخل قاعدة البيانات بدلاً من قبول قيمة يرسلها المتصفح.';
 drop trigger if exists bookings_generate_reference_code on public.bookings;
@@ -240,7 +240,7 @@ returns trigger
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $$
 declare
   transition_allowed boolean := false;
 begin
@@ -274,7 +274,7 @@ begin
 
   return new;
 end;
-$;
+$$;
 
 comment on function public.guard_booking_status_change() is 'يتحقق من انتقالات حالة الحجز ويسجل سجل التاريخ تلقائياً داخل المعاملة نفسها.';
 drop trigger if exists bookings_guard_status_change on public.bookings;
@@ -287,12 +287,12 @@ create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
 set search_path = ''
-as $
+as $$
 begin
   new.updated_at = now();
   return new;
 end;
-$;
+$$;
 
 comment on function public.set_updated_at() is 'يضبط وقت التحديث تلقائياً عند تعديل السجل، بدلاً من الاعتماد على ساعة المتصفح.';
 
