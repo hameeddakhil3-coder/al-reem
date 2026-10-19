@@ -67,3 +67,71 @@ html[dir="ltr"] .hero-note{justify-self:start;border-inline-start:0;border-inlin
 .admin-update{grid-template-columns:1fr}
 .admin-status{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
 @media(max-width:560px){.two-fields{grid-template-columns:1fr}.account-panel{padding:20px}.auth-tabs .button{flex:1}.booking-card{padding:14px}}
+
+
+/* AL REEM visual refinement — shared design system for all pages */
+:root{
+  --radius:18px;
+  --shadow:0 18px 48px rgba(72,8,21,.09);
+  --line:#e8dfe1;
+}
+body{background:#fff;letter-spacing:0}
+.site-header{box-shadow:0 5px 22px rgba(72,8,21,.035)}
+.brand-logo{display:block;object-fit:contain;flex:0 0 auto}
+.brand-copy strong{font-size:15px;letter-spacing:.12em}
+.brand-copy small{font-size:10px;line-height:1.5}
+.nav-actions{gap:9px}
+.search-section{position:relative;isolation:isolate;padding:36px 0 24px;background:linear-gradient(135deg,#fbf5f6 0%,#fff 58%,#f8eff1 100%)}
+.search-section:before{content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,rgba(133,13,36,.12),transparent);pointer-events:none}
+.search-container{margin-top:0}
+.search-card{border-color:rgba(72,8,21,.08);box-shadow:0 24px 64px rgba(72,8,21,.10)}
+.search-heading h2{line-height:1.5}
+.section{scroll-margin-top:90px}
+.section-heading h2,.contact-inner h2{line-height:1.4}
+.destination-card{border-radius:16px;box-shadow:0 12px 30px rgba(32,15,19,.08)}
+.destination-card:focus-visible{outline:3px solid #c77b8c;outline-offset:3px}
+.results-page{min-height:calc(100vh - 160px);padding:48px 0 76px;background:linear-gradient(180deg,#fbf6f7 0,#fff 340px)}
+.results-top{align-items:center}
+.results-top h1,.account-panel h1{font-size:clamp(28px,4vw,40px);line-height:1.35;letter-spacing:-.035em}
+.trip-summary{border-radius:16px;box-shadow:0 12px 32px rgba(72,8,21,.045)}
+.results-empty,.account-panel{border:1px solid rgba(72,8,21,.08);border-radius:20px;box-shadow:0 16px 42px rgba(72,8,21,.055)}
+.results-empty{padding:clamp(24px,4vw,42px)}
+.account-panel{max-width:850px;margin-inline:auto;padding:clamp(22px,4vw,38px);background:#fff}
+.account-panel .form-message{overflow-wrap:anywhere}
+.stack-form{gap:17px}
+.stack-form .field>span{font-size:12px}
+.stack-form .field input,.stack-form .field select,.stack-form .field textarea{min-height:46px;font-size:14px}
+.stack-form .button{min-height:48px}
+.booking-card{box-shadow:0 8px 22px rgba(72,8,21,.035)}
+.booking-card .admin-update{display:grid;gap:10px}
+.form-message:empty{display:none}
+.site-footer{background:#fff}
+.footer-bottom{border-top:1px solid var(--line)}
+@media(max-width:720px){
+  .search-section{padding:20px 0 18px}
+  .search-card{padding:22px 17px 18px}
+  .search-heading{gap:10px}
+  .search-heading h2{font-size:21px}
+  .manual-badge{white-space:normal;max-width:100%;line-height:1.7}
+  .nav-wrap{gap:8px}
+  .brand{gap:8px}
+  .brand-logo{width:38px;height:38px}
+  .brand-copy strong{font-size:13px}
+  .nav-actions{gap:6px}
+  .language-switch{padding:8px 10px}
+  .results-page{padding:28px 0 48px}
+  .results-top{align-items:flex-start;flex-direction:column;gap:15px}
+  .trip-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .results-actions{display:grid;grid-template-columns:1fr}
+  .results-actions .button{width:100%}
+  .account-panel{padding:21px 17px;border-radius:16px}
+  .auth-tabs{gap:7px}
+  .auth-tabs .button{min-width:0;padding-inline:10px}
+  .two-fields{grid-template-columns:1fr;gap:15px}
+}
+@media(max-width:380px){
+  .container{width:calc(100% - 24px)}
+  .brand-copy small{font-size:9px}
+  .trip-summary{grid-template-columns:1fr}
+  .search-heading h2{font-size:19px}
+}
