@@ -214,6 +214,88 @@ comment on table public.booking_status_history is 'سجل تدقيق لتغير 
 create index if not exists booking_status_history_booking_time_idx
   on public.booking_status_history (booking_id, changed_at desc);
 
+-- يمنع هذا المشغّل تغيير الحالة مباشرةً من الواجهة أو تجاوز سجل التاريخ.
+-- يسمح بتغيير الحالة للمسؤول فقط، ويتحقق من الانتقالات المحددة ويسجلها ضمن المعاملة نفسها.
+create or replace function public.guard_booking_status_change()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $
+declare
+  transition_allowed boolean := false;
+begin
+  if new.status is distinct from old.status then
+    if not public.has_role('admin') then
+      raise exception 'Only an authorized administrator can change booking status';
+    end if;
+
+    transition_allowed := case old.status
+      when 'new' then new.status in ('under_review', 'awaiting_information', 'rejected', 'cancelled')
+      when 'under_review' then new.status in ('awaiting_information', 'awaiting_payment', 'awaiting_confirmation', 'confirmed', 'rejected', 'cancelled')
+      when 'awaiting_information' then new.status in ('under_review', 'awaiting_payment', 'awaiting_confirmation', 'rejected', 'cancelled')
+      when 'awaiting_payment' then new.status in ('under_review', 'awaiting_confirmation', 'rejected', 'cancelled')
+      when 'awaiting_confirmation' then new.status in ('under_review', 'confirmed', 'rejected', 'cancelled')
+      when 'confirmed' then new.status in ('cancelled')
+      when 'rejected' then false
+      when 'cancelled' then false
+      else false
+    end;
+
+    if not transition_allowed then
+      raise exception 'Invalid booking status transition: % -> %', old.status, new.status;
+    end if;
+
+    insert into public.booking_status_history (
+      booking_id, previous_status, new_status, changed_by, change_note
+    ) values (
+      old.id, old.status, new.status, (select auth.uid()), 'تم تسجيل التغيير تلقائياً بواسطة قاعدة البيانات'
+    );
+  end if;
+
+  return new;
+end;
+$;
+
+comment on function public.guard_booking_status_change() is 'يتحقق من انتقالات حالة الحجز ويسجل سجل التاريخ تلقائياً داخل المعاملة نفسها.';
+drop trigger if exists bookings_guard_status_change on public.bookings;
+create trigger bookings_guard_status_change
+before update of status on public.bookings
+for each row execute function public.guard_booking_status_change();
+
+-- تحديث updated_at تلقائياً عند تعديل الصف، لتوحيد السلوك بين الواجهة والإدارة.
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+set search_path = ''
+as $
+begin
+  new.updated_at = now();
+  return new;
+end;
+$;
+
+comment on function public.set_updated_at() is 'يضبط وقت التحديث تلقائياً عند تعديل السجل، بدلاً من الاعتماد على ساعة المتصفح.';
+
+create trigger profiles_set_updated_at before update on public.profiles
+for each row execute function public.set_updated_at();
+create trigger bookings_set_updated_at before update on public.bookings
+for each row execute function public.set_updated_at();
+create trigger payments_set_updated_at before update on public.payments
+for each row execute function public.set_updated_at();
+create trigger destinations_set_updated_at before update on public.destinations
+for each row execute function public.set_updated_at();
+create trigger banners_set_updated_at before update on public.banners
+for each row execute function public.set_updated_at();
+create trigger homepage_sections_set_updated_at before update on public.homepage_sections
+for each row execute function public.set_updated_at();
+create trigger static_pages_set_updated_at before update on public.static_pages
+for each row execute function public.set_updated_at();
+create trigger faq_items_set_updated_at before update on public.faq_items
+for each row execute function public.set_updated_at();
+create trigger site_settings_set_updated_at before update on public.site_settings
+for each row execute function public.set_updated_at();
+
 -- =========================================================
 -- 4) سجل الدفع
 -- =========================================================
@@ -483,8 +565,14 @@ for select to authenticated using (public.has_role('admin'));
 create policy "site_settings_admin_manage" on public.site_settings
 for all to authenticated using (public.has_role('admin')) with check (public.has_role('admin'));
 
+-- يسمح للزائر بإرسال رسالة دون حساب، وللمستخدم المسجل بإرسال رسالة باسمه فقط.
+-- يمنع هذا الشرط انتحال معرّف مستخدم آخر عبر نموذج التواصل.
 create policy "contact_messages_create_public" on public.contact_messages
-for insert to anon, authenticated with check (status = 'new' and internal_note is null);
+for insert to anon, authenticated with check (
+  status = 'new'
+  and internal_note is null
+  and (user_id is null or user_id = (select auth.uid()))
+);
 create policy "contact_messages_admin_read" on public.contact_messages
 for select to authenticated using (public.has_role('admin'));
 create policy "contact_messages_admin_update" on public.contact_messages
