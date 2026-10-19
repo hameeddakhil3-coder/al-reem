@@ -119,18 +119,17 @@ function handleFlightSearch(event) {
   }
 
   const cabinValue = String(data.get("cabin") || "economy");
-  const cabinLabel = document.querySelector('#cabin option[value="' + cabinValue + '"]').textContent;
-  const lines = [
-    dictionary.summaryFrom + ": " + origin,
-    dictionary.summaryTo + ": " + destination,
-    dictionary.summaryDepart + ": " + departDate
-  ];
-  if (tripType === "round") lines.push(dictionary.summaryReturn + ": " + returnDate);
-  lines.push(dictionary.summaryPassengers + ": " + String(data.get("passengers")));
-  lines.push(dictionary.summaryCabin + ": " + cabinLabel);
-  document.getElementById("dialogSummary").textContent = lines.join("\n");
-  document.getElementById("requestDialog").showModal();
-  message.textContent = dictionary.formHint;
+  const params = new URLSearchParams({
+    origin,
+    destination,
+    departDate,
+    tripType,
+    passengers: String(data.get("passengers") || "1"),
+    cabin: cabinValue,
+    lang: currentLanguage
+  });
+  if (tripType === "round") params.set("returnDate", returnDate);
+  window.location.href = "results.html?" + params.toString();
 }
 
 /** يربط عناصر الواجهة بالأحداث بعد تحميل الصفحة ويضع الحد الأدنى لتاريخ المغادرة. */
