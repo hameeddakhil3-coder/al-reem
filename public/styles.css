@@ -17,6 +17,34 @@ html[dir="ltr"] .hero-note{justify-self:start;border-inline-start:0;border-inlin
 @media(max-width:380px){.container{width:calc(100% - 22px)}.brand-copy strong{font-size:12px}.brand-copy small{font-size:9px}.nav-wrap{gap:8px}.language-switch{padding:7px 8px}.hero h1{font-size:41px}.search-fields{grid-template-columns:1fr}.field-passengers{grid-column:auto}.search-card{padding-inline:13px}.manual-badge{white-space:normal}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
+/* AL Reem gazelle brand mark */
+.brand-logo{display:block;width:46px;height:46px;object-fit:contain;flex:0 0 46px;}
+.brand-logo-footer{width:42px;height:42px;flex-basis:42px;}
+.brand{display:inline-flex;align-items:center;gap:10px;}
+@media(max-width:600px){.brand-logo{width:38px;height:38px;flex-basis:38px;}.brand-logo-footer{width:40px;height:40px;flex-basis:40px;}}
+
+
 /* Homepage layout update: put the existing flight search directly below the header. */
 .search-section{position:relative;padding:24px 0 30px;background:linear-gradient(180deg,#f8e9ed 0%,#f3dce2 100%)}
 .search-section .search-container{margin-top:0}
+
+
+/* صفحة نتائج البحث */
+.results-page{min-height:calc(100vh - 160px);padding:38px 0 70px;background:linear-gradient(180deg,#f8e9ed 0%,#fff 320px)}
+.results-top{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;margin-bottom:24px}
+.results-top h1{font-size:clamp(28px,4vw,42px);line-height:1.35;margin:8px 0 10px;letter-spacing:-.04em}
+.results-top p{color:var(--muted);max-width:680px;margin:0}
+.trip-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin:24px 0}
+.trip-summary div{min-width:0;padding-inline:8px;border-inline-start:1px solid var(--line)}
+.trip-summary div:first-child{border-inline-start:0}
+.trip-summary dt{font-size:11px;color:var(--muted);margin-bottom:5px}
+.trip-summary dd{margin:0;font-weight:700;overflow-wrap:anywhere}
+.results-empty{max-width:760px;margin:28px auto 0;background:#fff;border:1px solid var(--line);border-radius:20px;padding:clamp(22px,5vw,42px);text-align:center;box-shadow:var(--shadow)}
+.results-empty .empty-icon{display:grid;place-items:center;width:62px;height:62px;border-radius:18px;background:var(--red-soft);color:var(--red);font-size:27px;margin:0 auto 18px}
+.results-empty h2{font-size:25px;margin-bottom:10px}
+.results-empty p{color:var(--muted);line-height:1.9;margin-bottom:18px}
+.results-note{font-size:12px;background:#fbf7f5;border-radius:12px;padding:13px 16px;color:#6a565b}
+.results-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px}
+.status-chip{display:inline-flex;align-items:center;gap:8px;border-radius:99px;background:#f8f4f2;color:#6a565b;padding:8px 12px;font-size:11px}
+@media(max-width:760px){.results-top{display:block}.results-top .status-chip{margin-top:14px}.trip-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.trip-summary div:nth-child(odd){border-inline-start:0}.trip-summary div:nth-child(even){border-inline-start:1px solid var(--line)}}
+@media(max-width:420px){.trip-summary{padding:14px;gap:12px}.trip-summary dd{font-size:13px}.results-empty h2{font-size:21px}}
