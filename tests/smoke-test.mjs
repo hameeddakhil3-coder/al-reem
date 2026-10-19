@@ -51,6 +51,10 @@ assert.match(migration, /reference_code text not null unique/i,
   "يجب أن يكون الرقم المرجعي فريدًا");
 assert.match(migration, /bookings_generate_reference_code|generate_booking_reference_code/i,
   "يجب توليد الرقم المرجعي داخل قاعدة البيانات لا من المتصفح");
+assert.doesNotMatch(migration, /\bas \$(?!\$)/i,
+  "يجب استخدام محددات صحيحة لنصوص الدوال في SQL");
+assert.doesNotMatch(migration, /^\$;$/m,
+  "يجب إغلاق نصوص الدوال باستخدام محددات الدولار المزدوجة");
 assert.doesNotMatch(migration, /^\$;$/m,
   "يجب إغلاق نصوص الدوال باستخدام محددات الدولار المزدوجة");
 const paymentsTablePosition = migration.indexOf("create table if not exists public.payments");
