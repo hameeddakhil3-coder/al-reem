@@ -35,3 +35,65 @@ html[dir="ltr"] .hero-note{justify-self:start;border-inline-start:0;border-inlin
 .faq-item p{margin:12px 0 0;color:var(--muted);font-size:12px;line-height:2;max-width:600px}
 .footer-bottom a{color:var(--red);text-decoration:underline;text-underline-offset:3px}
 @media(max-width:720px){.brand-logo{width:38px;height:38px;flex-basis:38px}.brand-logo-footer{width:40px;height:40px;flex-basis:40px}.hero-cta{width:100%;margin-top:22px}.faq-grid{grid-template-columns:1fr;gap:22px}.faq-intro h2{font-size:29px}.faq-item summary{font-size:13px}}
+
+/* تدقيق إضافي للتجاوب وسهولة الاستخدام على الشاشات الصغيرة */
+img,svg,video{max-width:100%}
+input,select,button{max-width:100%}
+.container{min-width:0}
+.search-card,.search-heading,.search-footer,.section-heading,.faq-grid{min-width:0}
+@media (max-width: 980px){
+  .nav-wrap{gap:14px}
+  .main-nav{gap:15px}
+  .hero-grid{gap:38px}
+  .search-fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .destination-card{min-height:250px;padding:21px}
+}
+@media (max-width: 720px){
+  html{scroll-padding-top:74px}
+  .container{width:min(100% - 32px,600px)}
+  .nav-wrap{height:72px;gap:10px}
+  .menu-toggle{display:inline-grid;place-items:center;flex:0 0 42px}
+  .main-nav{display:none;position:absolute;top:calc(100% + 1px);inset-inline:0;padding:14px 20px 18px;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 16px 28px rgba(72,8,21,.08);align-items:stretch;gap:0}
+  .main-nav.is-open{display:flex;flex-direction:column}
+  .main-nav a{padding:11px 4px;border-bottom:1px solid #f1e9eb}
+  .main-nav a:last-child{border-bottom:0}
+  .nav-actions{gap:7px}
+  .hero{padding:43px 0 35px}
+  .hero-grid{grid-template-columns:1fr;gap:26px;min-height:0}
+  .hero h1{font-size:clamp(36px,10vw,52px);overflow-wrap:anywhere}
+  .hero-description{font-size:14px}
+  .hero-note{justify-self:stretch;width:100%;padding:18px 20px}
+  .hero-note p{font-size:17px;margin-bottom:14px}
+  .search-container{margin-top:22px}
+  .search-card{padding:20px 16px;border-radius:15px}
+  .search-heading{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:18px}
+  .search-heading h2{font-size:21px}
+  .search-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 9px}
+  .field input,.field select{height:48px;padding-inline:10px;font-size:12px}
+  .search-footer{align-items:stretch;flex-direction:column}
+  .search-submit{width:100%}
+  .section{padding:58px 0}
+  .section-heading{align-items:flex-start;flex-direction:column;gap:12px;margin-bottom:22px}
+  .section-heading h2,.contact-inner h2{font-size:28px}
+  .section-heading>p{margin:0}
+  .destination-grid{grid-template-columns:1fr;gap:13px}
+  .destination-card{min-height:220px}
+  .hero-cta{width:100%;margin-top:22px}
+  .faq-grid{grid-template-columns:1fr;gap:22px}
+  .faq-intro h2{font-size:29px}
+  .faq-item summary{font-size:13px;line-height:1.8}
+  .contact-inner{align-items:flex-start;gap:22px}
+}
+@media (max-width: 380px){
+  .container{width:calc(100% - 24px)}
+  .brand{gap:7px}
+  .brand-copy strong{font-size:12px}
+  .brand-copy small{font-size:9px}
+  .search-fields{grid-template-columns:1fr}
+  .trip-type{flex-wrap:wrap}
+  .manual-badge{white-space:normal}
+  .destination-card{min-height:200px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
