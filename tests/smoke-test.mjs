@@ -76,5 +76,30 @@ assert.ok(paymentsTablePosition >= 0 && updatedAtTriggerPosition > paymentsTable
 assert.match(css, /--red:#850d24/i, "يجب تعريف لون العلامة المركزي");
 assert.match(css, /\[hidden\]\{display:none!important\}/i, "يجب احترام خاصية hidden");
 
+
+// صفحات التدفق الجديدة، مع التنبيه إلى أن النتائج ليست بيانات رحلات مباشرة.
+const resultsHtml = readFileSync(new URL("../results.html", import.meta.url), "utf8");
+const resultsJs = readFileSync(new URL("../results.js", import.meta.url), "utf8");
+const authHtml = readFileSync(new URL("../auth.html", import.meta.url), "utf8");
+const bookingHtml = readFileSync(new URL("../booking.html", import.meta.url), "utf8");
+const bookingJs = readFileSync(new URL("../booking.js", import.meta.url), "utf8");
+const accountHtml = readFileSync(new URL("../account.html", import.meta.url), "utf8");
+const accountJs = readFileSync(new URL("../account.js", import.meta.url), "utf8");
+const adminHtml = readFileSync(new URL("../admin.html", import.meta.url), "utf8");
+const adminJs = readFileSync(new URL("../admin.js", import.meta.url), "utf8");
+const supabaseConfig = readFileSync(new URL("../supabase-config.js", import.meta.url), "utf8");
+assert.match(js, /results\.html\?/i, "يجب نقل البحث الصحيح إلى صفحة النتائج");
+assert.match(resultsHtml, /id="bookingLink"/, "يجب إتاحة الانتقال إلى طلب الحجز اليدوي");
+assert.match(resultsJs, /location\.search/, "يجب تمرير بيانات البحث إلى نموذج طلب الحجز");
+assert.match(bookingJs, /from\("bookings"\)\.insert/, "يجب حفظ طلب الحجز في قاعدة البيانات");
+assert.match(accountJs, /from\("bookings"\)\.select/, "يجب أن تعرض صفحة الحساب طلبات المستخدم");
+assert.match(adminJs, /from\("user_roles"\)/, "يجب التحقق من دور الإدارة قبل عرض الطلبات");
+assert.match(adminJs, /from\("bookings"\)\.update/, "يجب أن تتيح الإدارة تحديث حالة الطلب");
+assert.match(supabaseConfig, /sb_publishable_|role.*anon/i, "يجب استخدام مفتاح عام فقط في الواجهة");
+assert.match(authHtml, /auth\.js/, "يجب ربط صفحة المصادقة بمنطقها");
+assert.match(bookingHtml, /auth\.js|booking\.js/, "يجب ربط صفحة الحجز بمنطقها");
+assert.match(accountHtml, /account\.js/, "يجب ربط صفحة الحساب بمنطقها");
+assert.match(adminHtml, /admin\.js/, "يجب ربط صفحة الإدارة بمنطقها");
+
 console.log("نجحت جميع اختبارات التحقق الساكنة الأولية.");
 console.log("تنبيه: هذه الاختبارات لا تغني عن تشغيل الموقع في متصفح أو اختبار SQL على قاعدة منفصلة.");
