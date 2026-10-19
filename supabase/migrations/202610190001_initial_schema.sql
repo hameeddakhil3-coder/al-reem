@@ -296,24 +296,8 @@ $;
 
 comment on function public.set_updated_at() is 'يضبط وقت التحديث تلقائياً عند تعديل السجل، بدلاً من الاعتماد على ساعة المتصفح.';
 
-create trigger profiles_set_updated_at before update on public.profiles
-for each row execute function public.set_updated_at();
-create trigger bookings_set_updated_at before update on public.bookings
-for each row execute function public.set_updated_at();
-create trigger payments_set_updated_at before update on public.payments
-for each row execute function public.set_updated_at();
-create trigger destinations_set_updated_at before update on public.destinations
-for each row execute function public.set_updated_at();
-create trigger banners_set_updated_at before update on public.banners
-for each row execute function public.set_updated_at();
-create trigger homepage_sections_set_updated_at before update on public.homepage_sections
-for each row execute function public.set_updated_at();
-create trigger static_pages_set_updated_at before update on public.static_pages
-for each row execute function public.set_updated_at();
-create trigger faq_items_set_updated_at before update on public.faq_items
-for each row execute function public.set_updated_at();
-create trigger site_settings_set_updated_at before update on public.site_settings
-for each row execute function public.set_updated_at();
+-- تُنشأ مشغلات updated_at بعد تعريف جميع الجداول في نهاية ملف الترحيل.
+
 
 -- =========================================================
 -- 4) سجل الدفع
@@ -608,5 +592,27 @@ values
   ('customer', 'عميل', 'يمكنه إدارة ملفه وطلبات الحجز الخاصة به'),
   ('admin', 'مسؤول', 'يدير محتوى الموقع والطلبات والإعدادات')
 on conflict (code) do nothing;
+
+-- =========================================================
+-- مشغلات التحديث التلقائي (بعد إنشاء كل الجداول)
+-- =========================================================
+create trigger profiles_set_updated_at before update on public.profiles
+for each row execute function public.set_updated_at();
+create trigger bookings_set_updated_at before update on public.bookings
+for each row execute function public.set_updated_at();
+create trigger payments_set_updated_at before update on public.payments
+for each row execute function public.set_updated_at();
+create trigger destinations_set_updated_at before update on public.destinations
+for each row execute function public.set_updated_at();
+create trigger banners_set_updated_at before update on public.banners
+for each row execute function public.set_updated_at();
+create trigger homepage_sections_set_updated_at before update on public.homepage_sections
+for each row execute function public.set_updated_at();
+create trigger static_pages_set_updated_at before update on public.static_pages
+for each row execute function public.set_updated_at();
+create trigger faq_items_set_updated_at before update on public.faq_items
+for each row execute function public.set_updated_at();
+create trigger site_settings_set_updated_at before update on public.site_settings
+for each row execute function public.set_updated_at();
 
 commit;
