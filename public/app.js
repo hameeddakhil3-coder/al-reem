@@ -5,7 +5,7 @@
  */
 const translations = {
   ar: {
-    skip:"تجاوز إلى المحتوى",brandTag:"رحلتك تبدأ هنا",navHome:"الرئيسية",navFlights:"الرحلات",navDestinations:"الوجهات",navAbout:"لماذا AL Reem؟",navContact:"تواصل معنا",
+    skip:"تجاوز إلى المحتوى",brandTag:"رحلتك تبدأ هنا",navHome:"الرئيسية",navAccount:"حسابي",navFlights:"الرحلات",navDestinations:"الوجهات",navAbout:"لماذا AL Reem؟",navContact:"تواصل معنا",
     eyebrow:"خطّط لرحلتك بثقة",heroTitle:"العالم أقرب<br><em>مما تتخيّل.</em>",heroDescription:"ابدأ رحلتك القادمة بتجربة بحث بسيطة وواضحة، ودع فريق AL Reem يساعدك في متابعة طلب الحجز.",
     pointOne:"خطوات واضحة",pointTwo:"متابعة بشرية للطلبات",noteKicker:"مساحة جديدة لاكتشاف العالم",noteText:"رحلتك مهمة. نعمل على جعل التخطيط لها أكثر سهولة ووضوحًا.",
     searchKicker:"ابدأ من هنا",searchTitle:"إلى أين تأخذك رحلتك؟",manualBadge:"طلب حجز بمراجعة يدوية",tripType:"نوع الرحلة",roundTrip:"ذهاب وعودة",oneWay:"ذهاب فقط",
@@ -23,7 +23,7 @@ const translations = {
     summaryFrom:"المغادرة من",summaryTo:"الوصول إلى",summaryDepart:"تاريخ المغادرة",summaryReturn:"تاريخ العودة",summaryPassengers:"عدد المسافرين",summaryCabin:"درجة السفر"
   },
   en: {
-    skip:"Skip to content",brandTag:"Your journey starts here",navHome:"Home",navFlights:"Flights",navDestinations:"Destinations",navAbout:"Why AL Reem?",navContact:"Contact",
+    skip:"Skip to content",brandTag:"Your journey starts here",navHome:"Home",navAccount:"My account",navFlights:"Flights",navDestinations:"Destinations",navAbout:"Why AL Reem?",navContact:"Contact",
     eyebrow:"Plan your journey with confidence",heroTitle:"The world is closer<br><em>than you think.</em>",heroDescription:"Start your next journey with a clear, simple search experience. AL Reem is being built to help you follow your booking request.",
     pointOne:"Clear steps",pointTwo:"Human-reviewed requests",noteKicker:"A new way to discover the world",noteText:"Your journey matters. We're working to make planning it clearer and easier.",
     searchKicker:"Start here",searchTitle:"Where will your journey take you?",manualBadge:"Booking requests reviewed manually",tripType:"Trip type",roundTrip:"Round trip",oneWay:"One way",
