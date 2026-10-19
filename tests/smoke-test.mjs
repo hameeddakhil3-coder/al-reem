@@ -42,16 +42,16 @@ assert.match(js, /departure date cannot be in the past|لا يمكن اختيا�
 
 // يتحقق من وجود أساسيات الأمان في مسودة SQL، وليس من صلاحيتها التشغيلية.
 assert.match(migration, /enable row level security;/i, "يجب تفعيل RLS على الجداول المناسبة");
-const declaredTables = [...migration.matchAll(/create table if not exists public\\.([a-z_]+)/gi)].map((match) => match[1]);
-const rlsTables = [...migration.matchAll(/alter table public\\.([a-z_]+) enable row level security/gi)].map((match) => match[1]);
+const declaredTables = [...migration.matchAll(/create table if not exists public\.([a-z_]+)/gi)].map((match) => match[1]);
+const rlsTables = [...migration.matchAll(/alter table public\.([a-z_]+) enable row level security/gi)].map((match) => match[1]);
 for (const table of declaredTables) {
   assert.ok(rlsTables.includes(table), `يجب تفعيل RLS على جدول ${table}`);
 }
-assert.match(migration, /function public\\.has_role\\(required_role text\\)[\\s\\S]*?security definer[\\s\\S]*?set search_path = ''/i,
+assert.match(migration, /function public\.has_role\(required_role text\)[\s\S]*?security definer[\s\S]*?set search_path = ''/i,
   "يجب أن تكون دالة فحص الدور محمية وتستخدم search_path فارغًا");
-assert.match(migration, /create trigger bookings_guard_status_change[\\s\\S]*?execute function public\\.guard_booking_status_change\\(\\)/i,
+assert.match(migration, /create trigger bookings_guard_status_change[\s\S]*?execute function public\.guard_booking_status_change\(\)/i,
   "يجب ربط التحقق من انتقالات حالة الحجز بمشغّل قاعدة البيانات");
-assert.match(migration, /insert into public\\.booking_status_history/i,
+assert.match(migration, /insert into public\.booking_status_history/i,
   "يجب تسجيل انتقالات حالة الحجز في سجل التاريخ");
 
 assert.match(migration, /grant execute on function public\.has_role\(text\) to anon, authenticated;/i,
