@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#850d24">
+  <link rel="icon" type="image/svg+xml" href="./assets/gazelle-original.svg">
+  <meta name="description" content="نتائج البحث عن الرحلات في AL REEM.">
+  <title>AL REEM | نتائج البحث</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./results.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="./index.html"><img class="brand-logo" src="./assets/gazelle-original.svg" alt="AL REEM" width="46" height="46"><span class="brand-copy"><strong>AL REEM</strong><small data-t="tag">رحلتك تبدأ هنا</small></span></a>
+      <div class="nav-actions"><button class="language-switch" id="languageToggle" type="button">EN</button><a class="button button-outline button-small" href="./index.html#search" data-t="edit">تعديل البحث</a></div>
+    </div>
+  </header>
+  <main class="results-page">
+    <div class="container">
+      <div class="results-top">
+        <div><span class="section-kicker" data-t="kicker">نتائج البحث</span><h1 data-t="title">تفاصيل رحلتك</h1><p data-t="subtitle">راجع تفاصيل البحث أدناه. سنعرض الرحلات الفعلية عند ربط مزود بيانات الرحلات.</p></div>
+        <span class="status-chip"><span>●</span><span data-t="manual">مرحلة المراجعة اليدوية</span></span>
+      </div>
+      <dl class="trip-summary" id="tripSummary" aria-live="polite"></dl>
+      <section class="results-empty" aria-labelledby="emptyTitle">
+        <div class="empty-icon" aria-hidden="true">✈</div>
+        <h2 id="emptyTitle" data-t="emptyTitle">لا توجد نتائج رحلات مباشرة بعد</h2>
+        <p data-t="emptyText">تم استلام تفاصيل البحث في هذه الصفحة، لكن AL REEM لم يُربط بعد بمزود يعرض الأسعار والمقاعد المتاحة. لن نعرض أسعارًا أو رحلات غير مؤكدة.</p>
+        <div class="results-note" data-t="note">هذه ليست تذكرة أو حجزًا مؤكدًا. طلب الحجز الفعلي ومتابعته سيتاحان بعد ربط قاعدة البيانات والمصادقة.</div>
+        <div class="results-actions"><a class="button button-primary" href="./index.html#search" data-t="back">العودة لتعديل البحث</a><a class="button button-outline" href="./index.html#contact" data-t="contact">تواصل معنا</a></div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-bottom"><span>© <span id="year"></span> AL REEM</span><span data-t="footer">نسخة قيد التطوير — لا توجد نتائج مباشرة بعد.</span></div></footer>
+</body>
+</html>
