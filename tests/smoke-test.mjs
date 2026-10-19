@@ -40,6 +40,8 @@ assert.match(migration, /bookings_guard_status_change|guard_booking_status_chang
 assert.match(migration, /booking_status_history/i, "يجب وجود سجل تاريخ حالات الحجز");
 assert.match(migration, /reference_code text not null unique/i,
   "يجب أن يكون الرقم المرجعي فريدًا");
+assert.match(migration, /bookings_generate_reference_code|generate_booking_reference_code/i,
+  "يجب توليد الرقم المرجعي داخل قاعدة البيانات لا من المتصفح");
 
 // تحقق ساكن محدود من وجود قواعد ألوان مركزية وحالة إخفاء عناصر HTML.
 assert.match(css, /--red:#850d24/i, "يجب تعريف لون العلامة المركزي");
