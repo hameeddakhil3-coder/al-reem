@@ -32,7 +32,7 @@ assert.match(html, /\.\/app\.js/, "يجب ربط ملف التفاعل");
 assert.equal(publicHtml, html, "يجب أن تطابق نسخة public صفحة الجذر");
 assert.equal(publicCss, css, "يجب أن تطابق نسخة public ملف التنسيق");
 assert.equal(publicJs, js, "يجب أن تطابق نسخة public ملف التفاعل");
-assert.match(wrangler, /"directory": "\\.\/public"/, "يجب توجيه Wrangler إلى مجلد الأصول العامة");
+assert.ok(wrangler.includes('"directory": "./public"'), "يجب توجيه Wrangler إلى مجلد الأصول العامة");
 
 // يمنع الاختبار اعتبار نموذج البحث اتصالًا فعليًا بمزود طيران في هذه المرحلة.
 assert.match(html, /مراجعة يدوية|manualBadge/, "يجب توضيح أن الطلب يخضع لمراجعة يدوية");
