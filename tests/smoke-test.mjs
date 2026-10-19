@@ -42,6 +42,10 @@ assert.match(migration, /reference_code text not null unique/i,
   "يجب أن يكون الرقم المرجعي فريدًا");
 assert.match(migration, /bookings_generate_reference_code|generate_booking_reference_code/i,
   "يجب توليد الرقم المرجعي داخل قاعدة البيانات لا من المتصفح");
+const paymentsTablePosition = migration.indexOf("create table if not exists public.payments");
+const updatedAtTriggerPosition = migration.indexOf("create trigger profiles_set_updated_at");
+assert.ok(paymentsTablePosition >= 0 && updatedAtTriggerPosition > paymentsTablePosition,
+  "يجب إنشاء جدول payments قبل مشغلات updated_at التي تشير إليه");
 
 // تحقق ساكن محدود من وجود قواعد ألوان مركزية وحالة إخفاء عناصر HTML.
 assert.match(css, /--red:#850d24/i, "يجب تعريف لون العلامة المركزي");
