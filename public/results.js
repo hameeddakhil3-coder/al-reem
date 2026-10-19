@@ -15,6 +15,7 @@
     document.querySelectorAll("[data-t]").forEach(el => { const key = el.dataset.t; if (d[key]) el.textContent = d[key]; });
     document.getElementById("languageToggle").textContent = lang === "ar" ? "EN" : "ع";
     document.title = lang === "ar" ? "AL REEM | نتائج البحث" : "AL REEM | Search results";
+    const bookingLink = document.getElementById("bookingLink"); if (bookingLink) bookingLink.href = "./booking.html" + location.search;
     const summary = document.getElementById("tripSummary");
     if (!valid) { summary.innerHTML = '<div><dt></dt><dd></dd></div>'; document.querySelector(".results-empty p").textContent = d.missing; return; }
     const cabinKey = cabinLabels[params.get("cabin")] || "economy";
