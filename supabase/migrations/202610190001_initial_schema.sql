@@ -62,7 +62,8 @@ $$;
 comment on function public.has_role(text) is 'تتحقق من دور المستخدم الحالي من جدول محمي؛ لا تقرأ الدور من مدخلات الواجهة.';
 
 revoke all on function public.has_role(text) from public;
-grant execute on function public.has_role(text) to authenticated;
+-- تستخدم سياسات المحتوى العامة هذه الدالة أيضاً؛ تنفيذها للزائر آمن لأنها تقرأ auth.uid() فقط وتعيد true/false.
+grant execute on function public.has_role(text) to anon, authenticated;
 
 -- =========================================================
 -- 2) الملفات الشخصية
