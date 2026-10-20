@@ -88,9 +88,10 @@ function handleFlightSearch(event) {
   const originInput = document.getElementById("origin");
   const destinationInput = document.getElementById("destination");
   const departInput = document.getElementById("departDate");
-  [originInput, destinationInput, departInput].forEach((field) => field.setAttribute("aria-invalid", "false"));
+  [originInput, destinationInput, departInput, document.getElementById("returnDate")].forEach((field) => field.setAttribute("aria-invalid", "false"));
+  message.textContent = "";
 
-  if (!origin || !destination || !departDate) {
+  if (!origin || !destination || !departDate || origin.length < 2 || destination.length < 2) {
     message.textContent = dictionary.missingFields;
     if (!origin) originInput.setAttribute("aria-invalid", "true");
     if (!destination) destinationInput.setAttribute("aria-invalid", "true");
