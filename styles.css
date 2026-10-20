@@ -198,3 +198,21 @@ body{background:#fff;letter-spacing:0}
 .flight-result-card p { margin: 0; line-height: 1.6; }
 .flight-result-card strong { color: var(--primary, #850d24); font-size: 1.2rem; }
 .flight-result-card [hidden] { display: none !important; }
+
+/* In-page airport suggestions: separate from mobile keyboard autocomplete. */
+.field { position: relative; }
+.airport-suggestions[hidden] { display: none !important; }
+.airport-suggestions {
+  position: absolute; z-index: 1000; top: calc(100% + 8px); inset-inline: 0;
+  max-height: 280px; overflow-y: auto; padding: 6px;
+  border: 1px solid rgba(133, 13, 36, .22); border-radius: 14px;
+  background: #fff; box-shadow: 0 16px 36px rgba(35, 13, 20, .18); text-align: start;
+}
+.airport-suggestion {
+  display: flex; width: 100%; flex-direction: column; gap: 4px; align-items: flex-start;
+  padding: 11px 12px; border: 0; border-radius: 9px; background: transparent;
+  color: #30242a; font: inherit; text-align: start; cursor: pointer;
+}
+.airport-suggestion:hover, .airport-suggestion:focus-visible, .airport-suggestion[aria-selected="true"] { background: #f8edf0; outline: none; }
+.airport-suggestion-main { font-size: .94rem; font-weight: 600; line-height: 1.45; }
+.airport-suggestion-meta { color: #796a70; font-size: .82rem; }
