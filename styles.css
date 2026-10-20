@@ -189,3 +189,12 @@ body{background:#fff;letter-spacing:0}
   border-color:rgba(255,255,255,.24);
 }
 .search-section .intro-note-footer{color:#6a565b}
+
+
+/* Live flight results */
+.live-results { display: grid; gap: 1rem; margin: 1.25rem 0; }
+.flight-result-card { display: grid; gap: .5rem; padding: 1rem 1.1rem; border: 1px solid var(--line, #e7dfe1); border-radius: 1rem; background: var(--surface, #fff); text-align: start; }
+.flight-result-card h3 { margin: 0; font-size: 1.05rem; }
+.flight-result-card p { margin: 0; line-height: 1.6; }
+.flight-result-card strong { color: var(--primary, #850d24); font-size: 1.2rem; }
+.flight-result-card [hidden] { display: none !important; }
