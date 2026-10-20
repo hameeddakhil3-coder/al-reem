@@ -149,7 +149,7 @@ function setupAirportAutocomplete(inputId, listId) {
   input.addEventListener("input", () => {
     clearTimeout(timer);
     const query = input.value.trim();
-    if (query.length < 2 || /\\([A-Z]{3}\\)\\s*$/.test(query)) { list.replaceChildren(); return; }
+    if (query.length < 2 || /\([A-Z]{3}\)\s*$/.test(query)) { list.replaceChildren(); return; }
     timer = setTimeout(async () => {
       if (query === lastQuery) return;
       lastQuery = query;
