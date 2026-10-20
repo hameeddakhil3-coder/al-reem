@@ -6,7 +6,14 @@
   };
   let lang = params.get("lang") === "en" ? "en" : "ar";
   const cabinLabels = {economy:"economy",business:"business",first:"first"};
-  const valid = params.has("origin") && params.has("destination") && params.has("departDate");
+  const originValue = (params.get("origin") || "").trim();
+  const destinationValue = (params.get("destination") || "").trim();
+  const departureValue = params.get("departDate") || "";
+  const returnValue = params.get("returnDate") || "";
+  const tripValue = params.get("tripType") || "oneway";
+  const now = new Date();
+  const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  const valid = originValue.length >= 2 && destinationValue.length >= 2 && originValue.toLocaleLowerCase() !== destinationValue.toLocaleLowerCase() && /^\\d{4}-\\d{2}-\\d{2}$/.test(departureValue) && departureValue >= today && (tripValue !== "round" || (/^\\d{4}-\\d{2}-\\d{2}$/.test(returnValue) && returnValue >= departureValue));
   function applyLanguage() {
     const d = dictionaries[lang];
     document.documentElement.lang = lang;
@@ -20,9 +27,9 @@
     if (!valid) { summary.innerHTML = '<div><dt></dt><dd></dd></div>'; document.querySelector(".results-empty p").textContent = d.missing; return; }
     const cabinKey = cabinLabels[params.get("cabin")] || "economy";
     const tripKey = params.get("tripType") === "round" ? "round" : "oneway";
-    const items = [[d.from,params.get("origin")],[d.to,params.get("destination")],[d.depart,params.get("departDate")]];
-    if (tripKey === "round" && params.get("returnDate")) items.push([d.ret,params.get("returnDate")]);
-    items.push([d.trip,d[tripKey]],[d.travelers,params.get("passengers") || "1"],[d.cabin,d[cabinKey]]);
+    const items = [[d.from,originValue],[d.to,destinationValue],[d.depart,departureValue]];
+    if (tripKey === "round" && returnValue) items.push([d.ret,returnValue]);
+    items.push([d.trip,d[tripKey]],[d.travelers,String(Math.min(6, Math.max(1, Number(params.get("passengers")) || 1)))],[d.cabin,d[cabinKey]]);
     summary.replaceChildren(...items.map(([label,value]) => {
       const wrapper = document.createElement("div"), dt = document.createElement("dt"), dd = document.createElement("dd");
       dt.textContent = label; dd.textContent = value; wrapper.append(dt,dd); return wrapper;
