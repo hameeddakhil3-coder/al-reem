@@ -3,6 +3,29 @@ const API_BASE = "https://ignav.com/api";
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/airports") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      if (!env.IGNAV_API_KEY) return json({ error: "provider_not_configured", message: "Airport search is not configured yet." }, 503);
+      const q = (url.searchParams.get("q") || "").trim().slice(0, 80);
+      if (q.length < 2) return json([]);
+      try {
+        const upstream = await fetch(API_BASE + "/airports?q=" + encodeURIComponent(q) + "&limit=8", {
+          headers: { "X-Api-Key": env.IGNAV_API_KEY, "Accept": "application/json" }
+        });
+        if (!upstream.ok) return json({ error: "airport_search_failed", message: "Airport search is temporarily unavailable." }, 502);
+        const data = await upstream.json();
+        return json(Array.isArray(data) ? data.slice(0, 8).map(a => ({
+          code: String(a.code || "").toUpperCase(),
+          name: String(a.name || ""),
+          city: String(a.city || ""),
+          country: String(a.country || "")
+        })).filter(a => /^[A-Z]{3}$/.test(a.code)) : []);
+      } catch {
+        return json({ error: "provider_unavailable", message: "Could not reach the airport provider." }, 502);
+      }
+    }
+
     if (url.pathname === "/api/flights/search") {
       if (request.method !== "POST") {
         return json({ error: "method_not_allowed", message: "Use POST." }, 405);
