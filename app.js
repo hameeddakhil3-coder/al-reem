@@ -248,8 +248,12 @@ function setupAirportAutocomplete(inputId, listId) {
         [a.code, a.city, a.name, a.country, ...(a.aliases || [])]
           .some(value => normalizeAirportSearch(value).includes(needle))
       );
+      // Put exact/local matches first so broad provider matches cannot hide the intended airport.
+      const rankedRemote = remote.filter(a =>
+        [a.code, a.city, a.name, a.country].some(value => normalizeAirportSearch(value || "").includes(needle))
+      );
       const seen = new Set();
-      const merged = [...remote, ...localMatches].filter(a => {
+      const merged = [...localMatches, ...rankedRemote, ...remote].filter(a => {
         if (!a.code || seen.has(a.code)) return false;
         seen.add(a.code); return true;
       }).slice(0, 8);
