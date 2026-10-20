@@ -165,3 +165,27 @@ body{background:#fff;letter-spacing:0}
 @media(max-width:900px){.home-intro{gap:25px;grid-template-columns:minmax(0,1.1fr) minmax(200px,.9fr)}.home-intro-note{padding:22px}.home-intro-copy>p{font-size:14px}}
 @media(max-width:720px){.home-intro{grid-template-columns:1fr;gap:20px;padding:12px 0 22px}.home-intro-copy h1{font-size:clamp(35px,10vw,46px);margin:10px 0 12px}.home-intro-copy>p{font-size:13px;line-height:1.9}.home-intro-points{gap:10px 16px;margin-top:15px}.home-intro-points>span{font-size:11px}.home-intro-note{min-height:0;padding:17px 18px;display:grid;grid-template-columns:36px 1fr;column-gap:12px;align-items:center}.intro-note-mark{grid-row:span 2;margin:0}.home-intro-note .section-kicker{align-self:end}.home-intro-note p{grid-column:2;margin:4px 0 9px;font-size:14px;line-height:1.7}.intro-note-footer{grid-column:2;font-size:8px}.search-container{margin-top:0}}
 @media(max-width:380px){.home-intro-points{display:grid;gap:9px}.home-intro-note{padding:15px}.home-intro-copy h1{font-size:34px}}
+
+
+/* User-requested burgundy flight-search background */
+.search-section{
+  background:linear-gradient(135deg,#760b25 0%,#8f1234 52%,#65091f 100%);
+}
+.search-section:before{
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+}
+.search-section .home-intro-copy h1,
+.search-section .home-intro-copy h1 em,
+.search-section .home-intro-copy>p,
+.search-section .home-intro-points>span{
+  color:#fff;
+}
+.search-section .home-intro-points i{
+  background:rgba(255,255,255,.16);
+  color:#fff;
+}
+.search-section .home-intro-note{
+  background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(248,233,237,.94));
+  border-color:rgba(255,255,255,.24);
+}
+.search-section .intro-note-footer{color:#6a565b}
