@@ -4,12 +4,14 @@
  let lang="ar";
  const client=()=>window.supabase.createClient(window.AL_REEM_SUPABASE_URL,window.AL_REEM_SUPABASE_KEY);
  const $=id=>document.getElementById(id);
+ const nextPath=new URLSearchParams(location.search).get("next");
+ function redirectAfterLogin(isAdmin){if(nextPath){const target=new URL(nextPath,location.href);if(target.origin===location.origin && /\/(booking|account|admin|results)\.html$/.test(target.pathname)){location.href=target.pathname+target.search;return}}location.href=isAdmin?"./admin.html":"./account.html"}
  function language(){const d=lang==="ar"?ar:en;document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";document.querySelectorAll("[data-t]").forEach(e=>{if(d[e.dataset.t])e.textContent=d[e.dataset.t]});$("languageToggle").textContent=lang==="ar"?"EN":"ع";}
  function message(s){$("authMessage").textContent=s}
  $("showLogin").addEventListener("click",()=>{$("loginForm").hidden=false;$("signupForm").hidden=true});
  $("showSignup").addEventListener("click",()=>{$("loginForm").hidden=true;$("signupForm").hidden=false});
  $("languageToggle").addEventListener("click",()=>{lang=lang==="ar"?"en":"ar";language()});
- $("loginForm").addEventListener("submit",async e=>{e.preventDefault();const f=new FormData(e.currentTarget);message((lang==="ar"?ar:en).signing);try{const {data,error}=await client().auth.signInWithPassword({email:f.get("email"),password:f.get("password")});if(error)throw error;const c=client();const {data:roles}=await c.from("user_roles").select("roles(code)").eq("user_id",data.user.id);const admin=(roles||[]).some(r=>r.roles&&r.roles.code==="admin");message((lang==="ar"?ar:en).loginOk);location.href=admin?"./admin.html":"./account.html"}catch(err){message((lang==="ar"?ar:en).error);console.error(err)}});
+ $("loginForm").addEventListener("submit",async e=>{e.preventDefault();const f=new FormData(e.currentTarget);message((lang==="ar"?ar:en).signing);try{const {data,error}=await client().auth.signInWithPassword({email:f.get("email"),password:f.get("password")});if(error)throw error;const c=client();const {data:roles}=await c.from("user_roles").select("roles(code)").eq("user_id",data.user.id);const admin=(roles||[]).some(r=>r.roles&&r.roles.code==="admin");message((lang==="ar"?ar:en).loginOk);redirectAfterLogin(admin)}catch(err){message((lang==="ar"?ar:en).error);console.error(err)}});
  $("signupForm").addEventListener("submit",async e=>{e.preventDefault();const f=new FormData(e.currentTarget);message((lang==="ar"?ar:en).signing);try{const c=client();const {data,error}=await c.auth.signUp({email:f.get("email"),password:f.get("password"),options:{data:{full_name:f.get("full_name"),phone:f.get("phone")},emailRedirectTo:location.origin+location.pathname}});if(error)throw error;if(data.session){await c.from("profiles").update({full_name:f.get("full_name"),phone:f.get("phone"),preferred_language:lang}).eq("user_id",data.user.id)}message((lang==="ar"?ar:en).signupOk)}catch(err){message((lang==="ar"?ar:en).error);console.error(err)}});
  language();
 })();
