@@ -15,7 +15,7 @@
   const tripValue = params.get("tripType") || "oneway";
   const now = new Date();
   const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-  const valid = originValue.length >= 2 && destinationValue.length >= 2 && originValue.toLocaleLowerCase() !== destinationValue.toLocaleLowerCase() && /^\\d{4}-\\d{2}-\\d{2}$/.test(departureValue) && departureValue >= today && (tripValue !== "round" || (/^\\d{4}-\\d{2}-\\d{2}$/.test(returnValue) && returnValue >= departureValue));
+  const valid = originValue.length >= 2 && destinationValue.length >= 2 && originValue.toLocaleLowerCase() !== destinationValue.toLocaleLowerCase() && /^\d{4}-\d{2}-\d{2}$/.test(departureValue) && departureValue >= today && (tripValue !== "round" || (/^\d{4}-\d{2}-\d{2}$/.test(returnValue) && returnValue >= departureValue));
   function applyLanguage() {
     const d = dictionaries[lang];
     document.documentElement.lang = lang;
