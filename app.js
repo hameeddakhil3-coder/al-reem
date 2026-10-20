@@ -147,58 +147,103 @@ const LOCAL_AIRPORTS = [
   {code:"BSR",city:"Basra",name:"Basra International Airport",country:"Iraq",aliases:["البصرة","مطار البصرة"]},
   {code:"NJF",city:"Najaf",name:"Al Najaf International Airport",country:"Iraq",aliases:["النجف","مطار النجف"]},
   {code:"ISU",city:"Sulaymaniyah",name:"Sulaimaniyah International Airport",country:"Iraq",aliases:["السليمانية","السليمانيه"]},
-  {code:"KIK",city:"Kirkuk",name:"Kirkuk International Airport",country:"Iraq"},
+  {code:"KIK",city:"Kirkuk",name:"Kirkuk International Airport",country:"Iraq",aliases:["كركوك"]},
   {code:"DXB",city:"Dubai",name:"Dubai International Airport",country:"United Arab Emirates",aliases:["دبي","مطار دبي"]},
   {code:"AUH",city:"Abu Dhabi",name:"Zayed International Airport",country:"United Arab Emirates",aliases:["أبوظبي","ابوظبي","أبو ظبي"]},
   {code:"DOH",city:"Doha",name:"Hamad International Airport",country:"Qatar",aliases:["الدوحة","مطار حمد"]},
   {code:"IST",city:"Istanbul",name:"Istanbul Airport",country:"Türkiye",aliases:["إسطنبول","اسطنبول","مطار إسطنبول"]},
-  {code:"SAW",city:"Istanbul",name:"Istanbul Sabiha Gökçen Airport",country:"Türkiye"},
+  {code:"SAW",city:"Istanbul",name:"Istanbul Sabiha Gökçen Airport",country:"Türkiye",aliases:["صبيحة","صبيحة كوكجن"]},
   {code:"AMM",city:"Amman",name:"Queen Alia International Airport",country:"Jordan",aliases:["عمان","عمّان","مطار الملكة علياء"]},
   {code:"CAI",city:"Cairo",name:"Cairo International Airport",country:"Egypt",aliases:["القاهرة","مطار القاهرة"]},
   {code:"KWI",city:"Kuwait City",name:"Kuwait International Airport",country:"Kuwait",aliases:["الكويت","مدينة الكويت"]},
   {code:"RUH",city:"Riyadh",name:"King Khalid International Airport",country:"Saudi Arabia",aliases:["الرياض","مطار الملك خالد"]},
   {code:"JED",city:"Jeddah",name:"King Abdulaziz International Airport",country:"Saudi Arabia",aliases:["جدة","جده","مطار الملك عبدالعزيز"]},
-  {code:"LHR",city:"London",name:"Heathrow Airport",country:"United Kingdom"},
-  {code:"CDG",city:"Paris",name:"Charles de Gaulle Airport",country:"France"},
-  {code:"FRA",city:"Frankfurt",name:"Frankfurt Airport",country:"Germany"},
-  {code:"JFK",city:"New York",name:"John F. Kennedy International Airport",country:"United States"}
+  {code:"LHR",city:"London",name:"Heathrow Airport",country:"United Kingdom",aliases:["لندن","هيثرو"]},
+  {code:"CDG",city:"Paris",name:"Charles de Gaulle Airport",country:"France",aliases:["باريس"]},
+  {code:"FRA",city:"Frankfurt",name:"Frankfurt Airport",country:"Germany",aliases:["فرانكفورت"]},
+  {code:"JFK",city:"New York",name:"John F. Kennedy International Airport",country:"United States",aliases:["نيويورك"]}
 ];
+
+
+function normalizeAirportSearch(value) {
+  return String(value || "").toLocaleLowerCase("ar").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").trim();
+}
 
 function setupAirportAutocomplete(inputId, listId) {
   const input = document.getElementById(inputId);
   const list = document.getElementById(listId);
-  let timer;
-  let lastQuery = "";
+  if (!input || !list) return;
+  let timer = null, activeIndex = -1, shownAirports = [];
+  function closeList() { list.hidden = true; list.replaceChildren(); activeIndex = -1; shownAirports = []; }
+  function choose(airport) {
+    input.value = (airport.city || airport.name) + " — " + airport.name + " (" + airport.code + ")";
+    closeList();
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+  function render(airports) {
+    shownAirports = airports.slice(0, 8);
+    list.replaceChildren();
+    if (!shownAirports.length) { closeList(); return; }
+    shownAirports.forEach((airport) => {
+      const option = document.createElement("button");
+      option.type = "button"; option.className = "airport-suggestion";
+      option.setAttribute("role", "option"); option.setAttribute("aria-selected", "false");
+      const main = document.createElement("span");
+      main.className = "airport-suggestion-main";
+      main.textContent = (airport.city || airport.name) + " — " + airport.name;
+      const meta = document.createElement("span");
+      meta.className = "airport-suggestion-meta";
+      meta.textContent = airport.code + (airport.country ? " · " + airport.country : "");
+      option.append(main, meta);
+      option.addEventListener("mousedown", event => event.preventDefault());
+      option.addEventListener("click", () => choose(airport));
+      list.append(option);
+    });
+    list.hidden = false;
+  }
   input.addEventListener("input", () => {
     clearTimeout(timer);
-    const query = input.value.trim();
-    if (query.length < 2 || query.endsWith(")") && /[A-Z]{3}/.test(query.slice(-4))) { list.replaceChildren(); return; }
+    const query = input.value.trim(), needle = normalizeAirportSearch(query);
+    if (needle.length < 2 || /\([A-Z]{3}\)\s*$/.test(query)) { closeList(); return; }
     timer = setTimeout(async () => {
-      if (query === lastQuery) return;
-      lastQuery = query;
-      let airports = [];
+      let remote = [];
       try {
-        const response = await fetch("/api/airports?q=" + encodeURIComponent(query), {headers: {"Accept":"application/json"}});
+        const response = await fetch("/api/airports?q=" + encodeURIComponent(query), { headers: { "Accept": "application/json" } });
         if (response.ok) {
           const data = await response.json();
-          if (Array.isArray(data)) airports = data.filter(a => /^[A-Z]{3}$/.test(String(a.code || "")));
+          if (Array.isArray(data)) remote = data.filter(a => /^[A-Z]{3}$/.test(String(a.code || "")));
         }
-      } catch { /* Use the local fallback when the provider is unavailable. */ }
+      } catch (_) {}
       if (input.value.trim() !== query) return;
-      if (!airports.length) {
-        const needle = query.toLocaleLowerCase();
-        airports = LOCAL_AIRPORTS.filter(a => [a.code,a.city,a.name,a.country,...(a.aliases||[])].some(v => v.toLocaleLowerCase().includes(needle))).slice(0,8);
-      }
-      list.replaceChildren(...airports.map(airport => {
-        const option = document.createElement("option");
-        option.value = (airport.city || airport.name) + " — " + airport.name + " (" + airport.code + ")";
-        return option;
-      }));
-    }, 200);
+      const localMatches = LOCAL_AIRPORTS.filter(a =>
+        [a.code, a.city, a.name, a.country, ...(a.aliases || [])]
+          .some(value => normalizeAirportSearch(value).includes(needle))
+      );
+      const seen = new Set();
+      const merged = [...remote, ...localMatches].filter(a => {
+        if (!a.code || seen.has(a.code)) return false;
+        seen.add(a.code); return true;
+      }).slice(0, 8);
+      render(merged);
+    }, 180);
   });
+  input.addEventListener("keydown", event => {
+    if (list.hidden || !shownAirports.length) return;
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      activeIndex = (activeIndex + (event.key === "ArrowDown" ? 1 : shownAirports.length - 1)) % shownAirports.length;
+      [...list.children].forEach((node, index) => {
+        node.setAttribute("aria-selected", String(index === activeIndex));
+        if (index === activeIndex) node.scrollIntoView({ block: "nearest" });
+      });
+    } else if (event.key === "Enter" && activeIndex >= 0) {
+      event.preventDefault(); choose(shownAirports[activeIndex]);
+    } else if (event.key === "Escape") closeList();
+  });
+  input.addEventListener("blur", () => setTimeout(closeList, 180));
+  document.addEventListener("click", event => { if (!event.target.closest("#" + inputId) && !event.target.closest("#" + listId)) closeList(); });
 }
 
-/** يربط عناصر الواجهة بالأحداث بعد تحميل الصفحة ويضع الحد الأدنى لتاريخ المغادرة. */
 function initializeApp() {
   document.getElementById("year").textContent = String(new Date().getFullYear());
   const today = new Date();
@@ -213,8 +258,8 @@ function initializeApp() {
   });
   document.querySelectorAll('input[name="tripType"]').forEach((input) => input.addEventListener("change", updateTripType));
   document.getElementById("flightSearchForm").addEventListener("submit", handleFlightSearch);
-  setupAirportAutocomplete("origin", "originAirports");
-  setupAirportAutocomplete("destination", "destinationAirports");
+  setupAirportAutocomplete("origin", "originSuggestions");
+  setupAirportAutocomplete("destination", "destinationSuggestions");
   document.getElementById("languageToggle").addEventListener("click", () => setLanguage(currentLanguage === "ar" ? "en" : "ar"));
   document.getElementById("menuToggle").addEventListener("click", () => {
     const nav = document.getElementById("mainNav");
