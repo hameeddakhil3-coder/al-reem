@@ -140,7 +140,30 @@ function handleFlightSearch(event) {
 }
 
 
-/** Airport suggestions use our Worker; the provider key never reaches the browser. */
+/** Airport autocomplete uses live provider results when available, then a local fallback. */
+const LOCAL_AIRPORTS = [
+  {code:"BGW",city:"Baghdad",name:"Baghdad International Airport",country:"Iraq"},
+  {code:"EBL",city:"Erbil",name:"Erbil International Airport",country:"Iraq"},
+  {code:"BSR",city:"Basra",name:"Basra International Airport",country:"Iraq"},
+  {code:"NJF",city:"Najaf",name:"Al Najaf International Airport",country:"Iraq"},
+  {code:"ISU",city:"Sulaymaniyah",name:"Sulaimaniyah International Airport",country:"Iraq"},
+  {code:"KIK",city:"Kirkuk",name:"Kirkuk International Airport",country:"Iraq"},
+  {code:"DXB",city:"Dubai",name:"Dubai International Airport",country:"United Arab Emirates"},
+  {code:"AUH",city:"Abu Dhabi",name:"Zayed International Airport",country:"United Arab Emirates"},
+  {code:"DOH",city:"Doha",name:"Hamad International Airport",country:"Qatar"},
+  {code:"IST",city:"Istanbul",name:"Istanbul Airport",country:"Türkiye"},
+  {code:"SAW",city:"Istanbul",name:"Istanbul Sabiha Gökçen Airport",country:"Türkiye"},
+  {code:"AMM",city:"Amman",name:"Queen Alia International Airport",country:"Jordan"},
+  {code:"CAI",city:"Cairo",name:"Cairo International Airport",country:"Egypt"},
+  {code:"KWI",city:"Kuwait City",name:"Kuwait International Airport",country:"Kuwait"},
+  {code:"RUH",city:"Riyadh",name:"King Khalid International Airport",country:"Saudi Arabia"},
+  {code:"JED",city:"Jeddah",name:"King Abdulaziz International Airport",country:"Saudi Arabia"},
+  {code:"LHR",city:"London",name:"Heathrow Airport",country:"United Kingdom"},
+  {code:"CDG",city:"Paris",name:"Charles de Gaulle Airport",country:"France"},
+  {code:"FRA",city:"Frankfurt",name:"Frankfurt Airport",country:"Germany"},
+  {code:"JFK",city:"New York",name:"John F. Kennedy International Airport",country:"United States"}
+];
+
 function setupAirportAutocomplete(inputId, listId) {
   const input = document.getElementById(inputId);
   const list = document.getElementById(listId);
@@ -149,22 +172,29 @@ function setupAirportAutocomplete(inputId, listId) {
   input.addEventListener("input", () => {
     clearTimeout(timer);
     const query = input.value.trim();
-    if (query.length < 2 || /\([A-Z]{3}\)\s*$/.test(query)) { list.replaceChildren(); return; }
+    if (query.length < 2 || query.endsWith(")") && /[A-Z]{3}/.test(query.slice(-4))) { list.replaceChildren(); return; }
     timer = setTimeout(async () => {
       if (query === lastQuery) return;
       lastQuery = query;
+      let airports = [];
       try {
-        const response = await fetch("/api/airports?q=" + encodeURIComponent(query), { headers: { "Accept": "application/json" } });
-        if (!response.ok) return;
-        const airports = await response.json();
-        if (input.value.trim() !== query || !Array.isArray(airports)) return;
-        list.replaceChildren(...airports.map((airport) => {
-          const option = document.createElement("option");
-          option.value = (airport.city || airport.name) + " — " + airport.name + " (" + airport.code + ")";
-          return option;
-        }));
-      } catch { /* Do not fabricate airport suggestions. */ }
-    }, 300);
+        const response = await fetch("/api/airports?q=" + encodeURIComponent(query), {headers: {"Accept":"application/json"}});
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data)) airports = data.filter(a => /^[A-Z]{3}$/.test(String(a.code || "")));
+        }
+      } catch { /* Use the local fallback when the provider is unavailable. */ }
+      if (input.value.trim() !== query) return;
+      if (!airports.length) {
+        const needle = query.toLocaleLowerCase();
+        airports = LOCAL_AIRPORTS.filter(a => [a.code,a.city,a.name,a.country].some(v => v.toLocaleLowerCase().includes(needle))).slice(0,8);
+      }
+      list.replaceChildren(...airports.map(airport => {
+        const option = document.createElement("option");
+        option.value = (airport.city || airport.name) + " — " + airport.name + " (" + airport.code + ")";
+        return option;
+      }));
+    }, 200);
   });
 }
 
