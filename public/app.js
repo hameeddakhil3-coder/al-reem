@@ -165,6 +165,33 @@ const LOCAL_AIRPORTS = [
 ];
 
 
+const AIRPORT_LABELS = {
+  BGW:{ar:["بغداد","مطار بغداد الدولي","العراق"],en:["Baghdad","Baghdad International Airport","Iraq"]},
+  EBL:{ar:["أربيل","مطار أربيل الدولي","العراق"],en:["Erbil","Erbil International Airport","Iraq"]},
+  BSR:{ar:["البصرة","مطار البصرة الدولي","العراق"],en:["Basra","Basra International Airport","Iraq"]},
+  NJF:{ar:["النجف","مطار النجف الدولي","العراق"],en:["Najaf","Al Najaf International Airport","Iraq"]},
+  ISU:{ar:["السليمانية","مطار السليمانية الدولي","العراق"],en:["Sulaymaniyah","Sulaimaniyah International Airport","Iraq"]},
+  KIK:{ar:["كركوك","مطار كركوك","العراق"],en:["Kirkuk","Kirkuk International Airport","Iraq"]},
+  DXB:{ar:["دبي","مطار دبي الدولي","الإمارات العربية المتحدة"],en:["Dubai","Dubai International Airport","United Arab Emirates"]},
+  AUH:{ar:["أبوظبي","مطار زايد الدولي","الإمارات العربية المتحدة"],en:["Abu Dhabi","Zayed International Airport","United Arab Emirates"]},
+  DOH:{ar:["الدوحة","مطار حمد الدولي","قطر"],en:["Doha","Hamad International Airport","Qatar"]},
+  IST:{ar:["إسطنبول","مطار إسطنبول","تركيا"],en:["Istanbul","Istanbul Airport","Türkiye"]},
+  SAW:{ar:["إسطنبول","مطار صبيحة كوكجن","تركيا"],en:["Istanbul","Istanbul Sabiha Gökçen Airport","Türkiye"]},
+  AMM:{ar:["عمّان","مطار الملكة علياء الدولي","الأردن"],en:["Amman","Queen Alia International Airport","Jordan"]},
+  CAI:{ar:["القاهرة","مطار القاهرة الدولي","مصر"],en:["Cairo","Cairo International Airport","Egypt"]},
+  KWI:{ar:["الكويت","مطار الكويت الدولي","الكويت"],en:["Kuwait City","Kuwait International Airport","Kuwait"]},
+  RUH:{ar:["الرياض","مطار الملك خالد الدولي","السعودية"],en:["Riyadh","King Khalid International Airport","Saudi Arabia"]},
+  JED:{ar:["جدة","مطار الملك عبدالعزيز الدولي","السعودية"],en:["Jeddah","King Abdulaziz International Airport","Saudi Arabia"]},
+  LHR:{ar:["لندن","مطار هيثرو","المملكة المتحدة"],en:["London","Heathrow Airport","United Kingdom"]},
+  CDG:{ar:["باريس","مطار شارل ديغول","فرنسا"],en:["Paris","Charles de Gaulle Airport","France"]},
+  FRA:{ar:["فرانكفورت","مطار فرانكفورت","ألمانيا"],en:["Frankfurt","Frankfurt Airport","Germany"]},
+  JFK:{ar:["نيويورك","مطار جون إف كينيدي الدولي","الولايات المتحدة"],en:["New York","John F. Kennedy International Airport","United States"]}
+};
+function localizedAirport(airport) {
+  const labels = AIRPORT_LABELS[airport.code] && AIRPORT_LABELS[airport.code][currentLanguage];
+  return labels ? { city: labels[0], name: labels[1], country: labels[2], code: airport.code } : airport;
+}
+
 function normalizeAirportSearch(value) {
   return String(value || "").toLocaleLowerCase("ar").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").trim();
 }
@@ -176,7 +203,8 @@ function setupAirportAutocomplete(inputId, listId) {
   let timer = null, activeIndex = -1, shownAirports = [];
   function closeList() { list.hidden = true; list.replaceChildren(); activeIndex = -1; shownAirports = []; }
   function choose(airport) {
-    input.value = (airport.city || airport.name) + " — " + airport.name + " (" + airport.code + ")";
+    const display = localizedAirport(airport);
+    input.value = (display.city || display.name) + " — " + display.name + " (" + display.code + ")";
     closeList();
     input.dispatchEvent(new Event("change", { bubbles: true }));
   }
@@ -190,10 +218,11 @@ function setupAirportAutocomplete(inputId, listId) {
       option.setAttribute("role", "option"); option.setAttribute("aria-selected", "false");
       const main = document.createElement("span");
       main.className = "airport-suggestion-main";
-      main.textContent = (airport.city || airport.name) + " — " + airport.name;
+      const display = localizedAirport(airport);
+      main.textContent = (display.city || display.name) + " — " + display.name;
       const meta = document.createElement("span");
       meta.className = "airport-suggestion-meta";
-      meta.textContent = airport.code + (airport.country ? " · " + airport.country : "");
+      meta.textContent = airport.code + (display.country ? " · " + display.country : "");
       option.append(main, meta);
       option.addEventListener("mousedown", event => event.preventDefault());
       option.addEventListener("click", () => choose(airport));
