@@ -73,12 +73,12 @@
             <div class="search-fields">
               <label class="field">
                 <span data-i18n="fromLabel">من</span>
-                <input id="origin" name="origin" list="originAirports" autocomplete="off" minlength="2" maxlength="120" required aria-describedby="formMessage" placeholder="مدينة أو مطار المغادرة" data-i18n-placeholder="fromPlaceholder">
+                <input id="origin" name="origin" autocomplete="off" minlength="2" maxlength="120" required aria-describedby="formMessage" placeholder="مدينة أو مطار المغادرة" data-i18n-placeholder="fromPlaceholder"><div class="airport-suggestions" id="originSuggestions" role="listbox" hidden></div>
               </label>
               <div class="route-swap" aria-hidden="true">⇄</div>
               <label class="field">
                 <span data-i18n="toLabel">إلى</span>
-                <input id="destination" name="destination" list="destinationAirports" autocomplete="off" minlength="2" maxlength="120" required aria-describedby="formMessage" placeholder="مدينة أو مطار الوصول" data-i18n-placeholder="toPlaceholder">
+                <input id="destination" name="destination" autocomplete="off" minlength="2" maxlength="120" required aria-describedby="formMessage" placeholder="مدينة أو مطار الوصول" data-i18n-placeholder="toPlaceholder"><div class="airport-suggestions" id="destinationSuggestions" role="listbox" hidden></div>
               </label>
               <label class="field">
                 <span data-i18n="departLabel">تاريخ المغادرة</span>
@@ -103,8 +103,6 @@
                 </select>
               </label>
             </div>
-            <datalist id="originAirports"></datalist>
-            <datalist id="destinationAirports"></datalist>
             <div class="search-footer">
               <p class="form-message" id="formMessage" role="status" aria-live="polite" data-i18n="formHint">هذا النموذج يجهّز طلب بحث فقط؛ لم يتم ربط مزود رحلات حتى الآن.</p>
               <button class="button button-primary search-submit" type="submit"><span data-i18n="searchButton">متابعة طلب الرحلة</span><span aria-hidden="true">↗</span></button>
