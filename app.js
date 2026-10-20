@@ -187,7 +187,7 @@ function setupAirportAutocomplete(inputId, listId) {
       if (input.value.trim() !== query) return;
       if (!airports.length) {
         const needle = query.toLocaleLowerCase();
-        airports = LOCAL_AIRPORTS.filter(a => [a.code,a.city,a.name,a.country].some(v => v.toLocaleLowerCase().includes(needle))).slice(0,8);
+        airports = LOCAL_AIRPORTS.filter(a => [a.code,a.city,a.name,a.country,...(a.aliases||[])].some(v => v.toLocaleLowerCase().includes(needle))).slice(0,8);
       }
       list.replaceChildren(...airports.map(airport => {
         const option = document.createElement("option");
