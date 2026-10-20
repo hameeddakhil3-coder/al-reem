@@ -79,8 +79,12 @@ function handleFlightSearch(event) {
   const dictionary = translations[currentLanguage];
   const form = event.currentTarget;
   const data = new FormData(form);
-  const origin = String(data.get("origin") || "").trim();
-  const destination = String(data.get("destination") || "").trim();
+  const originText = String(data.get("origin") || "").trim();
+  const destinationText = String(data.get("destination") || "").trim();
+  const originMatch = originText.match(/\(([A-Z]{3})\)\s*$/);
+  const destinationMatch = destinationText.match(/\(([A-Z]{3})\)\s*$/);
+  const origin = originMatch ? originMatch[1] : "";
+  const destination = destinationMatch ? destinationMatch[1] : "";
   const departDate = String(data.get("departDate") || "");
   const returnDate = String(data.get("returnDate") || "");
   const tripType = String(data.get("tripType") || "round");
@@ -91,8 +95,8 @@ function handleFlightSearch(event) {
   [originInput, destinationInput, departInput, document.getElementById("returnDate")].forEach((field) => field.setAttribute("aria-invalid", "false"));
   message.textContent = "";
 
-  if (!origin || !destination || !departDate || origin.length < 2 || destination.length < 2) {
-    message.textContent = dictionary.missingFields;
+  if (!origin || !destination || !departDate) {
+    message.textContent = (!origin || !destination) ? (currentLanguage === "ar" ? "اختر مطارًا من القائمة المقترحة لكل حقل." : "Select an airport from the suggestions for each field.") : dictionary.missingFields;
     if (!origin) originInput.setAttribute("aria-invalid", "true");
     if (!destination) destinationInput.setAttribute("aria-invalid", "true");
     if (!departDate) departInput.setAttribute("aria-invalid", "true");
@@ -107,7 +111,7 @@ function handleFlightSearch(event) {
     departInput.setAttribute("aria-invalid", "true");
     return;
   }
-  if (origin.toLocaleLowerCase() === destination.toLocaleLowerCase()) {
+  if (origin === destination) {
     message.textContent = dictionary.sameCity;
     originInput.setAttribute("aria-invalid", "true");
     destinationInput.setAttribute("aria-invalid", "true");
@@ -123,6 +127,8 @@ function handleFlightSearch(event) {
   const params = new URLSearchParams({
     origin,
     destination,
+    originLabel: originText,
+    destinationLabel: destinationText,
     departDate,
     tripType,
     passengers: String(data.get("passengers") || "1"),
@@ -131,6 +137,35 @@ function handleFlightSearch(event) {
   });
   if (tripType === "round") params.set("returnDate", returnDate);
   window.location.href = "results.html?" + params.toString();
+}
+
+
+/** Airport suggestions use our Worker; the provider key never reaches the browser. */
+function setupAirportAutocomplete(inputId, listId) {
+  const input = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+  let timer;
+  let lastQuery = "";
+  input.addEventListener("input", () => {
+    clearTimeout(timer);
+    const query = input.value.trim();
+    if (query.length < 2 || /\\([A-Z]{3}\\)\\s*$/.test(query)) { list.replaceChildren(); return; }
+    timer = setTimeout(async () => {
+      if (query === lastQuery) return;
+      lastQuery = query;
+      try {
+        const response = await fetch("/api/airports?q=" + encodeURIComponent(query), { headers: { "Accept": "application/json" } });
+        if (!response.ok) return;
+        const airports = await response.json();
+        if (input.value.trim() !== query || !Array.isArray(airports)) return;
+        list.replaceChildren(...airports.map((airport) => {
+          const option = document.createElement("option");
+          option.value = (airport.city || airport.name) + " — " + airport.name + " (" + airport.code + ")";
+          return option;
+        }));
+      } catch { /* Do not fabricate airport suggestions. */ }
+    }, 300);
+  });
 }
 
 /** يربط عناصر الواجهة بالأحداث بعد تحميل الصفحة ويضع الحد الأدنى لتاريخ المغادرة. */
@@ -148,6 +183,8 @@ function initializeApp() {
   });
   document.querySelectorAll('input[name="tripType"]').forEach((input) => input.addEventListener("change", updateTripType));
   document.getElementById("flightSearchForm").addEventListener("submit", handleFlightSearch);
+  setupAirportAutocomplete("origin", "originAirports");
+  setupAirportAutocomplete("destination", "destinationAirports");
   document.getElementById("languageToggle").addEventListener("click", () => setLanguage(currentLanguage === "ar" ? "en" : "ar"));
   document.getElementById("menuToggle").addEventListener("click", () => {
     const nav = document.getElementById("mainNav");
