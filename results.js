@@ -84,6 +84,14 @@
       if (title) title.textContent = lang === "ar" ? "عروض الرحلات المتاحة" : "Available flight offers";
       const icon = document.querySelector(".results-empty .empty-icon");
       if (icon) icon.hidden = true;
+      const airlineLogoUrls = {
+        "Air Arabia":"https://commons.wikimedia.org/wiki/Special:FilePath/Air%20Arabia%20logo%202018.svg",
+        "SalamAir":"https://commons.wikimedia.org/wiki/Special:FilePath/SalamAir.png",
+        "Qatar Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/Qatar%20Airways%20logo.svg",
+        "Royal Jordanian":"https://commons.wikimedia.org/wiki/Special:FilePath/Royal%20Jordanian%20Logo.svg",
+        "Iraqi":"https://commons.wikimedia.org/wiki/Special:FilePath/Iraqi%20Airways%20Logo.svg",
+        "Iraqi Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/Iraqi%20Airways%20Logo.svg"
+      };
       const airlineNames = {
         "Air Arabia": {ar:"العربية للطيران", initials:"AA"},
         "SalamAir": {ar:"سلام إير", initials:"SA"},
@@ -118,7 +126,7 @@
         const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
         const card = document.createElement("article"); card.className = "flight-result-card";
         const top = document.createElement("div"); top.className = "flight-card-top";
-        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials;
+        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; if (airlineLogoUrls[rawCarrier]) { const logoImage = document.createElement("img"); logoImage.src = airlineLogoUrls[rawCarrier]; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => logoImage.remove(); logo.replaceChildren(logoImage); }
         const airline = document.createElement("div"); airline.className = "airline-name";
         const heading = document.createElement("h3"); heading.textContent = lang === "ar" ? (carrier.ar || rawCarrier || "شركة طيران") : (rawCarrier || "Airline");
         const codeLine = document.createElement("span"); codeLine.className = "airline-subtitle"; codeLine.textContent = rawCarrier;
