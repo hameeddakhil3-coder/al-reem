@@ -181,7 +181,7 @@
         if (flightNumbers.length) {
           const flightNo = document.createElement("span");
           flightNo.className = "flight-number-badge";
-          flightNo.textContent = (lang === "ar" ? "رقم الرحلة: " : "Flight no.: ") + flightNumbers.join(" / ");
+          flightNo.textContent = (lang === "ar" ? (flightNumbers.length > 1 ? "أرقام مقاطع الرحلة: " : "رقم الرحلة: ") : (flightNumbers.length > 1 ? "Flight segments: " : "Flight no.: ")) + flightNumbers.join(" / ");
           top.append(flightNo);
         }
         const airline = document.createElement("div"); airline.className = "airline-name";
@@ -207,7 +207,7 @@
         const bottom = document.createElement("div"); bottom.className = "flight-card-bottom";
         const price = document.createElement("strong"); price.className = "flight-price";
         const amount = item.price && item.price.amount, currency = item.price && item.price.currency;
-        price.textContent = amount !== undefined && currency ? new Intl.NumberFormat(lang === "ar" ? "ar-IQ" : "en-US", {style:"currency",currency}).format(Number(amount)) : (lang === "ar" ? "السعر غير متاح" : "Price unavailable");
+        price.textContent = amount !== undefined && currency ? (new Intl.NumberFormat("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(Number(amount)) + " " + String(currency).toUpperCase()) : (lang === "ar" ? "السعر غير متاح" : "Price unavailable");
         const select = document.createElement("button"); select.type = "button"; select.className = "button button-primary flight-select"; select.textContent = lang === "ar" ? "اختيار هذه الرحلة" : "Select this flight";
         select.addEventListener("click", () => {
           const bookingParams = new URLSearchParams(location.search);
