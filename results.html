@@ -31,6 +31,17 @@
         <div class="empty-icon" aria-hidden="true">✈</div>
         <h2 id="emptyTitle" data-t="emptyTitle">لا توجد نتائج رحلات مباشرة بعد</h2>
         <p data-t="emptyText">تم استلام تفاصيل البحث في هذه الصفحة، لكن AL REEM لم يُربط بعد بمزود يعرض الأسعار والمقاعد المتاحة. لن نعرض أسعارًا أو رحلات غير مؤكدة.</p>
+        <section id="flightFilters" class="flight-filters" hidden aria-label="Flight filters">
+          <div class="flight-filter-heading"><strong data-t="filterTitle">تصفية ومقارنة العروض</strong><span id="flightResultCount" aria-live="polite"></span></div>
+          <div class="flight-filter-grid">
+            <label><span data-t="sortLabel">ترتيب حسب</span><select id="sortFlights"><option value="recommended" data-t="sortRecommended">المقترحة</option><option value="price" data-t="sortPrice">الأقل سعرًا</option><option value="duration" data-t="sortDuration">الأقصر مدة</option></select></label>
+            <label><span data-t="airlineLabel">شركة الطيران</span><select id="filterAirline"><option value="all" data-t="allAirlines">كل الشركات</option></select></label>
+            <label><span data-t="stopsLabel">عدد التوقفات</span><select id="filterStops"><option value="all" data-t="allStops">الكل</option><option value="0" data-t="nonstop">مباشرة</option><option value="1" data-t="oneStop">توقف واحد</option><option value="2plus" data-t="twoPlus">توقفان أو أكثر</option></select></label>
+            <label><span data-t="durationLabel">مدة الرحلة</span><select id="filterDuration"><option value="all" data-t="anyDuration">أي مدة</option><option value="6" data-t="under6">أقل من 6 ساعات</option><option value="12" data-t="under12">أقل من 12 ساعة</option><option value="24" data-t="under24">أقل من 24 ساعة</option></select></label>
+          </div>
+          <label class="price-range-filter"><span><span data-t="maxPrice">الحد الأقصى للسعر</span> <strong id="maxPriceLabel"></strong></span><input id="maxPriceFilter" type="range" min="0" max="100" value="100" step="1"></label>
+          <p id="noFilteredFlights" class="no-filtered-flights" hidden data-t="noFiltered">لا توجد عروض تطابق هذه الفلاتر. جرّب تغيير الاختيارات.</p>
+        </section>
         <div id="liveResults" class="live-results" aria-live="polite"></div>
         <div class="results-note" data-t="note">هذه ليست تذكرة أو حجزًا مؤكدًا. طلب الحجز الفعلي ومتابعته سيتاحان بعد ربط قاعدة البيانات والمصادقة.</div>
         <div class="results-actions"><a class="button button-primary" id="bookingLink" href="./booking.html" data-t="request">طلب حجز يدوي</a><a class="button button-outline" href="./auth.html" data-t="account">تسجيل الدخول / حسابي</a><a class="button button-outline" href="./index.html#search" data-t="back">العودة لتعديل البحث</a></div>
