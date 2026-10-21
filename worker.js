@@ -44,7 +44,7 @@ export default {
       const returnDate = input.return_date ? date(input.return_date) : null;
       const adults = Math.max(1, Math.min(9, Number.parseInt(input.adults, 10) || 1));
       const cabin = ["economy", "premium_economy", "business", "first"].includes(input.cabin_class) ? input.cabin_class : "economy";
-      const market = /^[A-Za-z]{2}$/.test(input.market || "IQ") ? (input.market || "IQ").toUpperCase() : "IQ";
+      const market = /^[A-Za-z]{2}$/.test(input.market || "US") ? (input.market || "US").toUpperCase() : "US";
 
       if (!origin || !destination || origin === destination || !departureDate || (input.return_date && !returnDate) || (returnDate && returnDate < departureDate)) {
         return json({ error: "invalid_search", message: "Check origin, destination, and travel dates." }, 400);
