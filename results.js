@@ -106,6 +106,8 @@
       if (icon) icon.hidden = true;
       const airlineLogoUrls = {
         "Air Arabia":"https://commons.wikimedia.org/wiki/Special:FilePath/Air%20Arabia%20logo%202018.svg",
+        "Oman Air":"https://commons.wikimedia.org/wiki/Special:FilePath/Oman_Air_logo.svg",
+        "AJet":"https://commons.wikimedia.org/wiki/Special:FilePath/AJet_logo.svg",
         "SalamAir":"https://commons.wikimedia.org/wiki/Special:FilePath/SalamAir.png",
         "Qatar Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/Qatar%20Airways%20logo.svg",
         "Royal Jordanian":"https://commons.wikimedia.org/wiki/Special:FilePath/Royal%20Jordanian%20Logo.svg",
@@ -114,6 +116,8 @@
       };
       const airlineNames = {
         "Air Arabia": {ar:"العربية للطيران", initials:"AA"},
+        "Oman Air": {ar:"الطيران العُماني", initials:"WY"},
+        "AJet": {ar:"إيه جيت", initials:"AJ"},
         "SalamAir": {ar:"سلام إير", initials:"SA"},
         "Qatar Airways": {ar:"الخطوط الجوية القطرية", initials:"QR"},
         "Royal Jordanian": {ar:"الملكية الأردنية", initials:"RJ"},
