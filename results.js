@@ -200,7 +200,7 @@
         const rawCarrier = String(outbound.carrier || outbound.airline || "");
         const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
         const card = document.createElement("article"); card.className = "flight-result-card";
-        card.dataset.airline = rawCarrier; card.dataset.price = item.price && item.price.amount !== undefined && Number.isFinite(Number(item.price.amount)) ? String(Number(item.price.amount)) : ""; card.dataset.currency = item.price && item.price.currency ? String(item.price.currency) : ""; card.dataset.duration = duration === null ? "" : String(duration); card.dataset.stops = stops === null ? "" : String(stops);
+        card.dataset.airline = rawCarrier; card.dataset.price = item.price && item.price.amount !== undefined && Number.isFinite(Number(item.price.amount)) ? String(Number(item.price.amount)) : ""; card.dataset.currency = item.price && item.price.currency ? String(item.price.currency) : "";
         const top = document.createElement("div"); top.className = "flight-card-top";
         const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; const providerLogo = [outbound.logo_url, outbound.logoUrl, outbound.airline_logo, outbound.airlineLogo, item.logo_url, item.logoUrl, item.airline_logo, item.airlineLogo, outbound.carrier_logo, outbound.carrierLogo].find(value => typeof value === "string" && /^https:\/\//i.test(value)); const logoUrl = providerLogo || airlineLogoUrls[rawCarrier]; if (logoUrl) { const logoImage = document.createElement("img"); logoImage.src = logoUrl; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => { logoImage.remove(); logo.textContent = carrier.initials; logo.classList.add("logo-fallback"); }; logo.replaceChildren(logoImage); }
         if (flightNumbers.length) {
@@ -223,6 +223,7 @@
         const durationText = document.createElement("span"); durationText.className = "flight-duration"; durationText.textContent = durationLabel(duration) || (lang === "ar" ? "المدة غير متاحة" : "Duration unavailable");
         const line = document.createElement("span"); line.className = "flight-route-track"; line.setAttribute("aria-hidden","true");
         const stops = segments.length > 0 ? Math.max(0, segments.length - 1) : null;
+        card.dataset.duration = duration === null ? "" : String(duration); card.dataset.stops = stops === null ? "" : String(stops);
         const intermediateStops = segments.slice(0, -1).map(segment => segment.arrival_airport).filter(Boolean);
         const stopText = document.createElement("span"); stopText.className = "flight-stop-label";
         stopText.textContent = stops === null ? (lang === "ar" ? "التوقفات غير محددة" : "Stops not provided") : stops === 0 ? (lang === "ar" ? "مباشرة" : "Nonstop") : (lang === "ar" ? stops+" توقف" : stops+" stop"+(stops>1?"s":""));
