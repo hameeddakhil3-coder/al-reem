@@ -1,8 +1,8 @@
 (() => {
   const params = new URLSearchParams(window.location.search);
   const dictionaries = {
-    ar: {tag:"رحلتك تبدأ هنا",edit:"تعديل البحث",kicker:"نتائج البحث",title:"تفاصيل رحلتك",subtitle:"راجع تفاصيل البحث أدناه. سنعرض الرحلات الفعلية عند ربط مزود بيانات الرحلات.",manual:"مرحلة المراجعة اليدوية",request:"طلب حجز يدوي",account:"تسجيل الدخول / حسابي",from:"من",to:"إلى",depart:"المغادرة",ret:"العودة",trip:"نوع الرحلة",round:"ذهاب وعودة",oneway:"ذهاب فقط",travelers:"المسافرون",cabin:"درجة السفر",economy:"اقتصادية",business:"رجال الأعمال",first:"الأولى",emptyTitle:"لا توجد نتائج رحلات مباشرة بعد",emptyText:"تم نقل تفاصيل البحث إلى هذه الصفحة، لكن AL REEM لم يُربط بعد بمزود يعرض الأسعار والمقاعد المتاحة. لن نعرض أسعارًا أو رحلات غير مؤكدة.",note:"هذه ليست تذكرة أو حجزًا مؤكدًا. يمكنك إرسال طلب حجز للمراجعة اليدوية بعد تسجيل الدخول. إرسال الطلب لا يعني تأكيد التذكرة أو السعر.",back:"العودة لتعديل البحث",contact:"تواصل معنا",footer:"نسخة قيد التطوير — لا توجد نتائج مباشرة بعد.",missing:"لم يتم العثور على تفاصيل بحث صالحة. ارجع إلى نموذج البحث وأدخل بيانات الرحلة."},
-    en: {tag:"Your journey starts here",edit:"Edit search",kicker:"Search results",title:"Your trip details",subtitle:"Review your search below. Live flights will appear once a flight-data provider is connected.",manual:"Manual review phase",request:"Request manual booking",account:"Sign in / My account",from:"From",to:"To",depart:"Departure",ret:"Return",trip:"Trip type",round:"Round trip",oneway:"One way",travelers:"Travelers",cabin:"Cabin class",economy:"Economy",business:"Business",first:"First",emptyTitle:"No live flight results yet",emptyText:"Your search details have been carried to this page, but AL REEM is not yet connected to a provider for live fares and seat availability. We will not show unverified flights or prices.",note:"This is not a ticket or confirmed booking. You can submit a manual booking request after signing in. Submission does not confirm a ticket or fare.",back:"Edit search",contact:"Contact us",footer:"Under development — no live results yet.",missing:"No valid search details were found. Return to the search form and enter your trip details."}
+    ar: {tag:"رحلتك تبدأ هنا",edit:"تعديل البحث",kicker:"نتائج البحث",title:"اختر رحلتك",subtitle:"قارن الأسعار والأوقات والتوقفات قبل اختيار العرض المناسب.",manual:"الأسعار والتوافر حسب المزوّد",filterTitle:"تصفية ومقارنة العروض",sortLabel:"ترتيب حسب",sortRecommended:"المقترحة",sortPrice:"الأقل سعرًا",sortDuration:"الأقصر مدة",airlineLabel:"شركة الطيران",allAirlines:"كل الشركات",stopsLabel:"عدد التوقفات",allStops:"الكل",nonstop:"مباشرة",oneStop:"توقف واحد",twoPlus:"توقفان أو أكثر",durationLabel:"مدة الرحلة",anyDuration:"أي مدة",under6:"أقل من 6 ساعات",under12:"أقل من 12 ساعة",under24:"أقل من 24 ساعة",maxPrice:"الحد الأقصى للسعر",noFiltered:"لا توجد عروض تطابق هذه الفلاتر. جرّب تغيير الاختيارات.",resultsCount:"عرض",of:"من",bags:"الأمتعة",notProvided:"لم يذكرها المزوّد",emptyTitle:"لا توجد نتائج رحلات مباشرة بعد",emptyText:"تم نقل تفاصيل البحث إلى هذه الصفحة، لكن AL REEM لم يُربط بعد بمزود يعرض الأسعار والمقاعد المتاحة. لن نعرض أسعارًا أو رحلات غير مؤكدة.",note:"هذه ليست تذكرة أو حجزًا مؤكدًا. يمكنك إرسال طلب حجز للمراجعة اليدوية بعد تسجيل الدخول. إرسال الطلب لا يعني تأكيد التذكرة أو السعر.",back:"العودة لتعديل البحث",contact:"تواصل معنا",footer:"نسخة قيد التطوير — لا توجد نتائج مباشرة بعد.",missing:"لم يتم العثور على تفاصيل بحث صالحة. ارجع إلى نموذج البحث وأدخل بيانات الرحلة."},
+    en: {tag:"Your journey starts here",edit:"Edit search",kicker:"Search results",title:"Choose your flight",subtitle:"Compare fares, schedules, and stops before choosing the right offer.",manual:"Provider fare and availability",filterTitle:"Filter and compare offers",sortLabel:"Sort by",sortRecommended:"Recommended",sortPrice:"Lowest price",sortDuration:"Shortest duration",airlineLabel:"Airline",allAirlines:"All airlines",stopsLabel:"Stops",allStops:"Any stops",nonstop:"Nonstop",oneStop:"1 stop",twoPlus:"2+ stops",durationLabel:"Journey duration",anyDuration:"Any duration",under6:"Under 6 hours",under12:"Under 12 hours",under24:"Under 24 hours",maxPrice:"Maximum price",noFiltered:"No offers match these filters. Try changing your selections.",resultsCount:"Showing",of:"of",bags:"Baggage",notProvided:"Not provided by supplier",emptyTitle:"No live flight results yet",emptyText:"Your search details have been carried to this page, but AL REEM is not yet connected to a provider for live fares and seat availability. We will not show unverified flights or prices.",note:"This is not a ticket or confirmed booking. You can submit a manual booking request after signing in. Submission does not confirm a ticket or fare.",back:"Edit search",contact:"Contact us",footer:"Under development — no live results yet.",missing:"No valid search details were found. Return to the search form and enter your trip details."}
   };
   let lang = params.get("lang") === "en" ? "en" : "ar";
   const cabinLabels = {economy:"economy",business:"business",first:"first"};
@@ -160,6 +160,30 @@
         return Math.round((y-x)/60000);
       };
       const durationLabel = minutes => minutes == null ? "" : (lang === "ar" ? (Math.floor(minutes/60) ? Math.floor(minutes/60)+" س " : "")+(minutes%60 ? (minutes%60)+" د" : "") : Math.floor(minutes/60)+"h "+String(minutes%60).padStart(2,"0")+"m");
+      function findBaggage(offer) {
+        const keys = ["baggage_allowance","baggageAllowance","checked_baggage","checkedBaggage","cabin_baggage","cabinBaggage","baggage"];
+        const queue = [offer];
+        let visited = 0;
+        while (queue.length && visited++ < 120) {
+          const current = queue.shift();
+          if (!current || typeof current !== "object") continue;
+          for (const [key, value] of Object.entries(current)) {
+            if (keys.includes(key) && value != null && value !== false && value !== "") {
+              if (typeof value === "string" || typeof value === "number") return String(value);
+              if (Array.isArray(value)) {
+                const pieces = value.map(v => typeof v === "string" || typeof v === "number" ? String(v) : "").filter(Boolean);
+                if (pieces.length) return pieces.join(", ");
+              }
+              if (typeof value === "object") {
+                const parts = ["quantity","pieces","weight","unit","description","text","allowance"].map(k => value[k]).filter(v => typeof v === "string" || typeof v === "number");
+                if (parts.length) return parts.join(" ");
+              }
+            }
+            if (value && typeof value === "object") queue.push(value);
+          }
+        }
+        return "";
+      }
       container.replaceChildren(...itineraries.map((item) => {
         const outbound = item.outbound || (Array.isArray(item.legs) ? item.legs[0] : {}) || {};
         const segments = Array.isArray(outbound.segments) ? outbound.segments : [];
@@ -176,8 +200,9 @@
         const rawCarrier = String(outbound.carrier || outbound.airline || "");
         const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
         const card = document.createElement("article"); card.className = "flight-result-card";
+        card.dataset.airline = rawCarrier; card.dataset.price = item.price && item.price.amount !== undefined && Number.isFinite(Number(item.price.amount)) ? String(Number(item.price.amount)) : ""; card.dataset.currency = item.price && item.price.currency ? String(item.price.currency) : ""; card.dataset.duration = duration === null ? "" : String(duration); card.dataset.stops = stops === null ? "" : String(stops);
         const top = document.createElement("div"); top.className = "flight-card-top";
-        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; if (airlineLogoUrls[rawCarrier]) { const logoImage = document.createElement("img"); logoImage.src = airlineLogoUrls[rawCarrier]; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => { logoImage.remove(); logo.textContent = carrier.initials; logo.classList.add("logo-fallback"); }; logo.replaceChildren(logoImage); }
+        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; const providerLogo = [outbound.logo_url, outbound.logoUrl, outbound.airline_logo, outbound.airlineLogo, item.logo_url, item.logoUrl, item.airline_logo, item.airlineLogo, outbound.carrier_logo, outbound.carrierLogo].find(value => typeof value === "string" && /^https:\/\//i.test(value)); const logoUrl = providerLogo || airlineLogoUrls[rawCarrier]; if (logoUrl) { const logoImage = document.createElement("img"); logoImage.src = logoUrl; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => { logoImage.remove(); logo.textContent = carrier.initials; logo.classList.add("logo-fallback"); }; logo.replaceChildren(logoImage); }
         if (flightNumbers.length) {
           const flightNo = document.createElement("span");
           flightNo.className = "flight-number-badge";
@@ -198,9 +223,11 @@
         const durationText = document.createElement("span"); durationText.className = "flight-duration"; durationText.textContent = durationLabel(duration) || (lang === "ar" ? "المدة غير متاحة" : "Duration unavailable");
         const line = document.createElement("span"); line.className = "flight-route-track"; line.setAttribute("aria-hidden","true");
         const stops = segments.length > 0 ? Math.max(0, segments.length - 1) : null;
+        const intermediateStops = segments.slice(0, -1).map(segment => segment.arrival_airport).filter(Boolean);
         const stopText = document.createElement("span"); stopText.className = "flight-stop-label";
         stopText.textContent = stops === null ? (lang === "ar" ? "التوقفات غير محددة" : "Stops not provided") : stops === 0 ? (lang === "ar" ? "مباشرة" : "Nonstop") : (lang === "ar" ? stops+" توقف" : stops+" stop"+(stops>1?"s":""));
         middle.append(durationText,line,stopText);
+        if (intermediateStops.length) { const stopAirports = document.createElement("span"); stopAirports.className = "flight-stop-airports"; stopAirports.textContent = (lang === "ar" ? "عبر " : "Via ") + intermediateStops.join(" · "); middle.append(stopAirports); }
         const arrival = document.createElement("div"); arrival.className = "flight-time-block flight-arrival";
         const arriveTime = document.createElement("strong"); arriveTime.textContent = last.arrival_time_local ? formatTime(last.arrival_time_local) : (lang === "ar" ? "موعد الوصول غير متاح" : "Arrival time unavailable");
         const arriveAirport = document.createElement("span"); arriveAirport.textContent = last.arrival_airport || destinationValue; arrival.append(arriveTime,arriveAirport); routeLine.append(departure,middle,arrival);
@@ -225,9 +252,64 @@
           location.href = "./booking.html?" + bookingParams.toString();
         });
         bottom.append(price,select); card.append(top,routeLine,bottom);
+        const baggage = findBaggage(item);
+        if (baggage) { const baggageLine = document.createElement("p"); baggageLine.className = "flight-baggage"; baggageLine.textContent = (lang === "ar" ? "الأمتعة: " : "Baggage: ") + baggage; card.append(baggageLine); }
         if (item.requires_self_transfer) { const warning = document.createElement("p"); warning.className = "flight-warning"; warning.textContent = lang === "ar" ? "تنبيه: يتطلب هذا المسار انتقالًا ذاتيًا بين الرحلات؛ راجع شروط الانتقال قبل المتابعة." : "Self-transfer required. Review transfer conditions before proceeding."; card.append(warning); }
         return card;
       }));
+      const filters = document.getElementById("flightFilters");
+      const airlineFilter = document.getElementById("filterAirline");
+      const stopFilter = document.getElementById("filterStops");
+      const durationFilter = document.getElementById("filterDuration");
+      const sortFilter = document.getElementById("sortFlights");
+      const priceFilter = document.getElementById("maxPriceFilter");
+      const priceLabel = document.getElementById("maxPriceLabel");
+      const countLabel = document.getElementById("flightResultCount");
+      const noFiltered = document.getElementById("noFilteredFlights");
+      const cards = [...container.querySelectorAll(".flight-result-card")];
+      const priced = cards.map(card => Number(card.dataset.price)).filter(Number.isFinite);
+      const minPrice = priced.length ? Math.min(...priced) : 0;
+      const maxPrice = priced.length ? Math.max(...priced) : 100;
+      priceFilter.min = String(Math.floor(minPrice));
+      priceFilter.max = String(Math.ceil(maxPrice) || 100);
+      priceFilter.value = priceFilter.max;
+      const priceCurrency = cards.find(card => card.dataset.currency)?.dataset.currency || "USD";
+      const formatFilterPrice = value => {
+        try { return new Intl.NumberFormat(lang === "ar" ? "ar-IQ" : "en-US", {style:"currency",currency:priceCurrency,maximumFractionDigits:0}).format(Number(value)); }
+        catch { return String(value); }
+      };
+      const d = dictionaries[lang];
+      const airlineNamesForFilter = [...new Set(cards.map(card => card.dataset.airline).filter(Boolean))].sort();
+      airlineFilter.replaceChildren(new Option(d.allAirlines, "all"), ...airlineNamesForFilter.map(name => new Option(name, name)));
+      filters.hidden = false;
+      function applyFilters() {
+        const maxAllowed = Number(priceFilter.value);
+        if (priceLabel) priceLabel.textContent = formatFilterPrice(maxAllowed);
+        let visibleCount = 0;
+        cards.forEach(card => {
+          const price = Number(card.dataset.price);
+          const duration = Number(card.dataset.duration);
+          const stops = card.dataset.stops === "" ? null : Number(card.dataset.stops);
+          const priceOkay = card.dataset.price === "" || price <= maxAllowed;
+          const airlineOkay = airlineFilter.value === "all" || card.dataset.airline === airlineFilter.value;
+          const stopsOkay = stopFilter.value === "all" || (stopFilter.value === "0" && stops === 0) || (stopFilter.value === "1" && stops === 1) || (stopFilter.value === "2plus" && stops !== null && stops >= 2);
+          const limit = Number(durationFilter.value);
+          const durationOkay = durationFilter.value === "all" || (Number.isFinite(duration) && duration > 0 && duration < limit * 60);
+          card.hidden = !(priceOkay && airlineOkay && stopsOkay && durationOkay);
+          if (!card.hidden) visibleCount++;
+        });
+        const sortBy = sortFilter.value;
+        const sorted = [...cards].sort((a,b) => {
+          if (sortBy === "price") return (Number(a.dataset.price) || Infinity) - (Number(b.dataset.price) || Infinity);
+          if (sortBy === "duration") return (Number(a.dataset.duration) || Infinity) - (Number(b.dataset.duration) || Infinity);
+          return cards.indexOf(a) - cards.indexOf(b);
+        });
+        sorted.forEach(card => container.append(card));
+        if (countLabel) countLabel.textContent = lang === "ar" ? "عرض " + visibleCount + " من " + cards.length : "Showing " + visibleCount + " of " + cards.length;
+        if (noFiltered) noFiltered.hidden = visibleCount !== 0;
+      }
+      [airlineFilter, stopFilter, durationFilter, sortFilter, priceFilter].forEach(control => control.addEventListener("input", applyFilters));
+      applyFilters();
     } catch {
       if (emptyText) emptyText.textContent = lang === "ar" ? "تعذّر الاتصال بخدمة البحث. تحقق من الاتصال وحاول مجددًا." : "Could not connect to flight search. Check your connection and try again.";
     }
