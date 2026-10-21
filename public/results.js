@@ -202,18 +202,23 @@
         const card = document.createElement("article"); card.className = "flight-result-card";
         card.dataset.airline = rawCarrier; card.dataset.price = item.price && item.price.amount !== undefined && Number.isFinite(Number(item.price.amount)) ? String(Number(item.price.amount)) : ""; card.dataset.currency = item.price && item.price.currency ? String(item.price.currency) : "";
         const top = document.createElement("div"); top.className = "flight-card-top";
-        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; const providerLogo = [outbound.logo_url, outbound.logoUrl, outbound.airline_logo, outbound.airlineLogo, item.logo_url, item.logoUrl, item.airline_logo, item.airlineLogo, outbound.carrier_logo, outbound.carrierLogo].find(value => typeof value === "string" && /^https:\/\//i.test(value)); const logoUrl = providerLogo || airlineLogoUrls[rawCarrier]; if (logoUrl) { const logoImage = document.createElement("img"); logoImage.src = logoUrl; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => { logoImage.remove(); logo.textContent = carrier.initials; logo.classList.add("logo-fallback"); }; logo.replaceChildren(logoImage); }
-        if (flightNumbers.length) {
-          const flightNo = document.createElement("span");
-          flightNo.className = "flight-number-badge";
-          flightNo.textContent = (lang === "ar" ? "رقم الرحلة: " : "Flight no.: ") + flightNumbers.join(" / ");
-          top.append(flightNo);
-        }
+        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-label", rawCarrier || "Airline"); logo.textContent = carrier.initials; const providerLogo = [outbound.logo_url, outbound.logoUrl, outbound.airline_logo, outbound.airlineLogo, item.logo_url, item.logoUrl, item.airline_logo, item.airlineLogo, outbound.carrier_logo, outbound.carrierLogo].find(value => typeof value === "string" && /^https:\/\//i.test(value)); const logoUrl = providerLogo || airlineLogoUrls[rawCarrier]; if (logoUrl) { const logoImage = document.createElement("img"); logoImage.src = logoUrl; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.referrerPolicy = "no-referrer"; logoImage.onerror = () => { logoImage.remove(); logo.textContent = carrier.initials; logo.classList.add("logo-fallback"); }; logo.replaceChildren(logoImage); }
         const airline = document.createElement("div"); airline.className = "airline-name";
         const heading = document.createElement("h3"); heading.textContent = lang === "ar" ? (carrier.ar || rawCarrier || "شركة طيران") : (rawCarrier || "Airline");
         const codeLine = document.createElement("span"); codeLine.className = "airline-subtitle"; codeLine.textContent = rawCarrier;
         airline.append(heading); if (lang === "ar" && rawCarrier && rawCarrier !== carrier.ar) airline.append(codeLine);
-        top.append(logo,airline);
+        const identity = document.createElement("div"); identity.className = "flight-carrier-identity";
+        identity.append(logo,airline);
+        if (flightNumbers.length) {
+          const flightMeta = document.createElement("div");
+          flightMeta.className = "flight-meta-badges";
+          const flightNo = document.createElement("span");
+          flightNo.className = "flight-number-badge";
+          flightNo.textContent = (lang === "ar" ? "رقم الرحلة: " : "Flight no.: ") + flightNumbers.join(" / ");
+          flightMeta.append(flightNo);
+          identity.append(flightMeta);
+        }
+        top.append(identity);
         const routeLine = document.createElement("div"); routeLine.className = "flight-route-line";
         const departure = document.createElement("div"); departure.className = "flight-time-block";
         const departTime = document.createElement("strong"); departTime.textContent = first.departure_time_local ? formatTime(first.departure_time_local) : (lang === "ar" ? "موعد المغادرة غير متاح" : "Departure time unavailable");
@@ -232,6 +237,18 @@
         const arrival = document.createElement("div"); arrival.className = "flight-time-block flight-arrival";
         const arriveTime = document.createElement("strong"); arriveTime.textContent = last.arrival_time_local ? formatTime(last.arrival_time_local) : (lang === "ar" ? "موعد الوصول غير متاح" : "Arrival time unavailable");
         const arriveAirport = document.createElement("span"); arriveAirport.textContent = last.arrival_airport || destinationValue; arrival.append(arriveTime,arriveAirport); routeLine.append(departure,middle,arrival);
+        const aircraftCandidates = segments.map(segment => segment.aircraft || segment.aircraft_type || segment.aircraftType || segment.aircraft_name || segment.aircraftName || segment.equipment || segment.equipment_code || segment.equipmentCode || segment.plane || "").filter(value => typeof value === "string" && value.trim());
+        const aircraftValue = aircraftCandidates[0] || outbound.aircraft || outbound.aircraft_type || outbound.aircraftType || outbound.aircraft_name || outbound.aircraftName || outbound.equipment || outbound.equipment_code || outbound.equipmentCode || item.aircraft || item.aircraft_type || item.aircraftType || "";
+        const aircraftText = typeof aircraftValue === "string" ? aircraftValue : (aircraftValue && typeof aircraftValue === "object" ? [aircraftValue.name,aircraftValue.code,aircraftValue.iata_code,aircraftValue.iataCode].filter(Boolean).join(" · ") : "");
+        const info = document.createElement("div"); info.className = "flight-extra-info";
+        const infoItems = [];
+        if (aircraftText) infoItems.push([lang === "ar" ? "نوع الطائرة" : "Aircraft", aircraftText]);
+        const cabin = item.cabin_class || outbound.cabin_class || outbound.cabinClass || params.get("cabin") || "";
+        if (cabin) infoItems.push([lang === "ar" ? "درجة السفر" : "Cabin", cabin === "economy" ? (lang === "ar" ? "اقتصادية" : "Economy") : cabin === "business" ? (lang === "ar" ? "رجال الأعمال" : "Business") : cabin === "first" ? (lang === "ar" ? "الأولى" : "First") : cabin.replaceAll("_"," ")]);
+        const durationExact = durationLabel(duration);
+        if (durationExact) infoItems.push([lang === "ar" ? "مدة الرحلة" : "Duration", durationExact]);
+        if (stops !== null) infoItems.push([lang === "ar" ? "التوقفات" : "Stops", stops === 0 ? (lang === "ar" ? "مباشرة" : "Nonstop") : String(stops)]);
+        info.replaceChildren(...infoItems.map(([label,value]) => { const cell=document.createElement("div"); cell.className="flight-extra-item"; const small=document.createElement("span"); small.textContent=label; const strong=document.createElement("strong"); strong.textContent=value; cell.append(small,strong); return cell; }));
         const bottom = document.createElement("div"); bottom.className = "flight-card-bottom";
         const price = document.createElement("strong"); price.className = "flight-price";
         const amount = item.price && item.price.amount, currency = item.price && item.price.currency;
@@ -252,7 +269,9 @@
           if (item.requires_self_transfer) bookingParams.set("flightSelfTransfer","1"); else bookingParams.delete("flightSelfTransfer");
           location.href = "./booking.html?" + bookingParams.toString();
         });
-        bottom.append(price,select); card.append(top,routeLine,bottom);
+        bottom.append(price,select); card.append(top,routeLine);
+        if (infoItems.length) card.append(info);
+        card.append(bottom);
         const baggage = findBaggage(item);
         if (baggage) { const baggageLine = document.createElement("p"); baggageLine.className = "flight-baggage"; baggageLine.textContent = (lang === "ar" ? "الأمتعة: " : "Baggage: ") + baggage; card.append(baggageLine); }
         if (item.requires_self_transfer) { const warning = document.createElement("p"); warning.className = "flight-warning"; warning.textContent = lang === "ar" ? "تنبيه: يتطلب هذا المسار انتقالًا ذاتيًا بين الرحلات؛ راجع شروط الانتقال قبل المتابعة." : "Self-transfer required. Review transfer conditions before proceeding."; card.append(warning); }
