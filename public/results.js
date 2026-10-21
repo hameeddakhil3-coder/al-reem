@@ -151,7 +151,12 @@
       const formatTime = value => {
         if (!value) return "";
         const d = new Date(value);
-        return Number.isNaN(d.getTime()) ? String(value).replace("T"," ") : new Intl.DateTimeFormat(lang === "ar" ? "ar-IQ" : "en-GB", {dateStyle:"medium",timeStyle:"short"}).format(d);
+        return Number.isNaN(d.getTime()) ? String(value).replace("T"," ") : new Intl.DateTimeFormat(lang === "ar" ? "ar-IQ" : "en-GB", {hour:"2-digit",minute:"2-digit"}).format(d);
+      };
+      const formatDate = value => {
+        if (!value) return "";
+        const d = new Date(value);
+        return Number.isNaN(d.getTime()) ? "" : new Intl.DateTimeFormat(lang === "ar" ? "ar-IQ" : "en-GB", {day:"numeric",month:"short"}).format(d);
       };
       const minutesBetween = (a,b) => {
         if (!a || !b) return null;
@@ -174,10 +179,13 @@
         };
         const flightNumbers = [...new Set([...segments.map(segmentFlightNumber), segmentFlightNumber(outbound)].filter(Boolean))];
         const rawCarrier = String(outbound.carrier || outbound.airline || "");
-        const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
+        const carrierKey = Object.keys(airlineNames).find(name => name.toLowerCase() === rawCarrier.toLowerCase()) ||
+          Object.keys(airlineNames).find(name => rawCarrier.toLowerCase().includes(name.toLowerCase()) || name.toLowerCase().includes(rawCarrier.toLowerCase())) || rawCarrier;
+        const carrier = airlineNames[carrierKey] || {ar:rawCarrier,initials:rawCarrier.split(/\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
+        const logoUrl = airlineLogoUrls[carrierKey] || airlineLogoUrls[rawCarrier];
         const card = document.createElement("article"); card.className = "flight-result-card";
         const top = document.createElement("div"); top.className = "flight-card-top";
-        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; if (airlineLogoUrls[rawCarrier]) { const logoImage = document.createElement("img"); logoImage.src = airlineLogoUrls[rawCarrier]; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => { logoImage.remove(); logo.textContent = carrier.initials; logo.classList.add("logo-fallback"); }; logo.replaceChildren(logoImage); }
+        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; if (logoUrl) { const logoImage = document.createElement("img"); logoImage.src = logoUrl; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => { logoImage.remove(); logo.textContent = carrier.initials; logo.classList.add("logo-fallback"); }; logo.replaceChildren(logoImage); }
         if (flightNumbers.length) {
           const flightNo = document.createElement("span");
           flightNo.className = "flight-number-badge";
@@ -191,8 +199,10 @@
         top.append(logo,airline);
         const routeLine = document.createElement("div"); routeLine.className = "flight-route-line";
         const departure = document.createElement("div"); departure.className = "flight-time-block";
-        const departTime = document.createElement("strong"); departTime.textContent = first.departure_time_local ? formatTime(first.departure_time_local) : (lang === "ar" ? "موعد المغادرة غير متاح" : "Departure time unavailable");
-        const departAirport = document.createElement("span"); departAirport.textContent = first.departure_airport || originValue; departure.append(departTime,departAirport);
+        const departureValue = first.departure_time_local || first.departure_time;
+        const departTime = document.createElement("strong"); departTime.textContent = departureValue ? formatTime(departureValue) : (lang === "ar" ? "الوقت غير متاح" : "Time unavailable");
+        const departDate = document.createElement("small"); departDate.className = "flight-date"; departDate.textContent = formatDate(departureValue);
+        const departAirport = document.createElement("span"); departAirport.textContent = first.departure_airport || originValue; departure.append(departTime,departDate,departAirport);
         const middle = document.createElement("div"); middle.className = "flight-route-middle";
         const duration = minutesBetween(first.departure_time_local || first.departure_time, last.arrival_time_local || last.arrival_time);
         const durationText = document.createElement("span"); durationText.className = "flight-duration"; durationText.textContent = durationLabel(duration) || (lang === "ar" ? "المدة غير متاحة" : "Duration unavailable");
@@ -202,8 +212,10 @@
         stopText.textContent = stops === null ? (lang === "ar" ? "التوقفات غير محددة" : "Stops not provided") : stops === 0 ? (lang === "ar" ? "مباشرة" : "Nonstop") : (lang === "ar" ? stops+" توقف" : stops+" stop"+(stops>1?"s":""));
         middle.append(durationText,line,stopText);
         const arrival = document.createElement("div"); arrival.className = "flight-time-block flight-arrival";
-        const arriveTime = document.createElement("strong"); arriveTime.textContent = last.arrival_time_local ? formatTime(last.arrival_time_local) : (lang === "ar" ? "موعد الوصول غير متاح" : "Arrival time unavailable");
-        const arriveAirport = document.createElement("span"); arriveAirport.textContent = last.arrival_airport || destinationValue; arrival.append(arriveTime,arriveAirport); routeLine.append(departure,middle,arrival);
+        const arrivalValue = last.arrival_time_local || last.arrival_time;
+        const arriveTime = document.createElement("strong"); arriveTime.textContent = arrivalValue ? formatTime(arrivalValue) : (lang === "ar" ? "الوقت غير متاح" : "Time unavailable");
+        const arriveDate = document.createElement("small"); arriveDate.className = "flight-date"; arriveDate.textContent = formatDate(arrivalValue);
+        const arriveAirport = document.createElement("span"); arriveAirport.textContent = last.arrival_airport || destinationValue; arrival.append(arriveTime,arriveDate,arriveAirport); routeLine.append(departure,middle,arrival);
         const bottom = document.createElement("div"); bottom.className = "flight-card-bottom";
         const price = document.createElement("strong"); price.className = "flight-price";
         const amount = item.price && item.price.amount, currency = item.price && item.price.currency;
