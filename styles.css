@@ -422,3 +422,21 @@ body:has(.sticky-fare-bar:not([hidden])){padding-bottom:110px}
  .sticky-fare-inner>div>small{max-width:165px}
  .sticky-fare-inner .button{min-width:0;flex:0 0 48%;padding-inline:8px;font-size:12px}
 }
+
+/* Shared design tokens and lightweight responsive behavior across search, results and booking */
+:root{--reem-brand:#850d24;--reem-brand-dark:#65091b;--reem-border:#eadfe2;--reem-muted:#796a6e;--reem-radius:14px;--reem-space:16px}
+body{font-family:"IBM Plex Sans Arabic","DM Sans",sans-serif}
+button,input,select,textarea{font:inherit}
+.site-header{background:rgba(255,255,255,.97)}
+.brand-logo{object-fit:contain;width:44px;height:44px}
+.button,.language-switch,.route-swap{transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+.button-primary{background:var(--reem-brand);border-color:var(--reem-brand)}
+.button-primary:hover{background:var(--reem-brand-dark);border-color:var(--reem-brand-dark)}
+.field input,.field select,.field textarea{border-radius:11px}
+:where(.search-card,.flight-result-card,.selected-flight-summary,.review-flight-card,.flight-filters,.account-panel){border-color:var(--reem-border)}
+[dir="rtl"] .brand-copy,[dir="ltr"] .brand-copy{text-align:start}
+[dir="rtl"] input,[dir="rtl"] select,[dir="rtl"] textarea{ text-align:start}
+[dir="ltr"] input,[dir="ltr"] select,[dir="ltr"] textarea{text-align:start}
+.airline-logo img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:520px){.container{width:min(100% - 24px,100%)}.site-header .nav-wrap{gap:10px}.brand-logo{width:40px;height:40px}}
