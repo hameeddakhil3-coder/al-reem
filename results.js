@@ -61,7 +61,17 @@
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        if (emptyText) emptyText.textContent = data.message || (lang === "ar" ? "تعذّر إكمال البحث الآن. حاول لاحقًا." : "Search could not be completed. Please try again later.");
+        const messages = {
+          provider_not_configured: lang === "ar" ? "خدمة البحث عن الرحلات غير مهيأة على الخادم بعد." : "Flight search is not configured on the server yet.",
+          provider_auth_error: lang === "ar" ? "تعذّر التحقق من مفتاح مزوّد الرحلات. يلزم فحص السرّ في إعدادات Cloudflare." : "The flight provider API key was rejected. Check the Cloudflare secret.",
+          provider_invalid_search: lang === "ar" ? "رفض مزوّد الرحلات تفاصيل البحث. تحقق من التاريخ والمسار وعدد المسافرين." : "The provider rejected these search details. Check the date, route, and passengers.",
+          provider_endpoint_error: lang === "ar" ? "عنوان واجهة البحث لدى المزوّد غير صحيح أو غير متاح." : "The configured provider search endpoint was not found.",
+          provider_rate_limited: lang === "ar" ? "طلبات البحث كثيرة مؤقتًا. انتظر قليلًا ثم حاول مجددًا." : "The provider temporarily rate-limited this request. Please wait and try again.",
+          provider_billing_required: lang === "ar" ? "تتطلب خدمة المزوّد تفعيل الفوترة أو أن الحصة المجانية غير متاحة. لم يُخصم أي مبلغ من خلال هذا الموقع." : "The provider requires billing or the free allowance is unavailable. This site did not charge you.",
+          flight_provider_error: lang === "ar" ? "لم يتمكن مزوّد الرحلات من إكمال البحث. رمز الاستجابة: " + (data.provider_status || "غير معروف") + ". يمكن استخدام طلب الحجز اليدوي مؤقتًا." : "The flight provider could not complete the search. Response status: " + (data.provider_status || "unknown") + ". You can use manual booking for now."
+        };
+        const message = messages[data.error] || (lang === "ar" ? "تعذّر إكمال البحث الآن. حاول لاحقًا." : "Search could not be completed. Please try again later.");
+        if (emptyText) emptyText.textContent = message;
         return;
       }
       const itineraries = Array.isArray(data.itineraries) ? data.itineraries : [];
