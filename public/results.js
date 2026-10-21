@@ -112,7 +112,15 @@
         "Qatar Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/Qatar%20Airways%20logo.svg",
         "Royal Jordanian":"https://commons.wikimedia.org/wiki/Special:FilePath/Royal%20Jordanian%20Logo.svg",
         "Iraqi":"https://commons.wikimedia.org/wiki/Special:FilePath/Iraqi%20Airways%20Logo.svg",
-        "Iraqi Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/Iraqi%20Airways%20Logo.svg"
+        "Iraqi Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/Iraqi%20Airways%20Logo.svg",
+        "flydubai":"https://commons.wikimedia.org/wiki/Special:FilePath/Flydubai_logo.svg",
+        "Emirates":"https://commons.wikimedia.org/wiki/Special:FilePath/Emirates_logo.svg",
+        "Turkish Airlines":"https://commons.wikimedia.org/wiki/Special:FilePath/Turkish_Airlines_logo_2019.svg",
+        "Japan Airlines":"https://commons.wikimedia.org/wiki/Special:FilePath/Japan_Airlines_logo.svg",
+        "All Nippon Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/All_Nippon_Airways_logo.svg",
+        "ANA":"https://commons.wikimedia.org/wiki/Special:FilePath/All_Nippon_Airways_logo.svg",
+        "Etihad Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/Etihad_Airways_logo.svg",
+        "EgyptAir":"https://commons.wikimedia.org/wiki/Special:FilePath/EgyptAir_Logo.svg"
       };
       const airlineNames = {
         "Air Arabia": {ar:"العربية للطيران", initials:"AA"},
@@ -127,7 +135,12 @@
         "Etihad Airways": {ar:"الاتحاد للطيران", initials:"EY"},
         "Turkish Airlines": {ar:"الخطوط الجوية التركية", initials:"TK"},
         "flydubai": {ar:"فلاي دبي", initials:"FZ"},
-        "Pegasus Airlines": {ar:"طيران بيغاسوس", initials:"PC"}
+        "Pegasus Airlines": {ar:"طيران بيغاسوس", initials:"PC"},
+        "Emirates": {ar:"طيران الإمارات", initials:"EK"},
+"Japan Airlines": {ar:"الخطوط الجوية اليابانية", initials:"JL"},
+        "All Nippon Airways": {ar:"خطوط أول نيبون الجوية", initials:"NH"},
+        "ANA": {ar:"خطوط أول نيبون الجوية", initials:"NH"},
+        "EgyptAir": {ar:"مصر للطيران", initials:"MS"},
       };
       const formatTime = value => {
         if (!value) return "";
@@ -146,11 +159,25 @@
         const segments = Array.isArray(outbound.segments) ? outbound.segments : [];
         const first = segments[0] || {};
         const last = segments[segments.length - 1] || {};
+        const segmentFlightNumber = segment => {
+          const direct = segment.flight_number || segment.flightNumber || segment.flight_no || segment.flightNo || segment.number || segment.marketing_flight_number || segment.marketingFlightNumber;
+          if (direct) return String(direct);
+          const airlineCode = segment.airline_code || segment.carrier_code || segment.marketing_carrier || segment.airlineCode || "";
+          const number = segment.number || segment.flight_number_suffix || "";
+          return airlineCode && number ? String(airlineCode) + String(number) : "";
+        };
+        const flightNumbers = [...new Set(segments.map(segmentFlightNumber).filter(Boolean))];
         const rawCarrier = String(outbound.carrier || outbound.airline || "");
         const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
         const card = document.createElement("article"); card.className = "flight-result-card";
         const top = document.createElement("div"); top.className = "flight-card-top";
         const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; if (airlineLogoUrls[rawCarrier]) { const logoImage = document.createElement("img"); logoImage.src = airlineLogoUrls[rawCarrier]; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => { logoImage.remove(); logo.textContent = carrier.initials; logo.classList.add("logo-fallback"); }; logo.replaceChildren(logoImage); }
+        if (flightNumbers.length) {
+          const flightNo = document.createElement("span");
+          flightNo.className = "flight-number-badge";
+          flightNo.textContent = (lang === "ar" ? "رقم الرحلة: " : "Flight no.: ") + flightNumbers.join(" / ");
+          top.append(flightNo);
+        }
         const airline = document.createElement("div"); airline.className = "airline-name";
         const heading = document.createElement("h3"); heading.textContent = lang === "ar" ? (carrier.ar || rawCarrier || "شركة طيران") : (rawCarrier || "Airline");
         const codeLine = document.createElement("span"); codeLine.className = "airline-subtitle"; codeLine.textContent = rawCarrier;
@@ -179,6 +206,8 @@
         select.addEventListener("click", () => {
           const bookingParams = new URLSearchParams(location.search);
           bookingParams.set("airline", rawCarrier);
+          if (flightNumbers.length) bookingParams.set("flightNumber", flightNumbers.join(" / "));
+          else bookingParams.delete("flightNumber");
           if (item.ignav_id) bookingParams.set("flightId", String(item.ignav_id));
           if (amount !== undefined) bookingParams.set("flightPrice", String(amount));
           if (currency) bookingParams.set("flightCurrency", String(currency));
