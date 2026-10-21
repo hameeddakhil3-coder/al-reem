@@ -63,11 +63,21 @@ export default {
         });
         const data = await upstream.json().catch(() => ({}));
         if (!upstream.ok) {
-          const status = upstream.status === 401 || upstream.status === 403 ? 502 : upstream.status === 402 ? 402 : 502;
+          // Return a safe diagnostic status, never the provider response body or API key.
+          const status = upstream.status === 402 ? 402 : 502;
+          const error = upstream.status === 401 || upstream.status === 403 ? "provider_auth_error" :
+            upstream.status === 400 || upstream.status === 422 ? "provider_invalid_search" :
+            upstream.status === 404 ? "provider_endpoint_error" :
+            upstream.status === 429 ? "provider_rate_limited" :
+            upstream.status === 402 ? "provider_billing_required" : "flight_provider_error";
           return json({
-            error: "flight_provider_error",
+            error,
+            provider_status: upstream.status,
             message: upstream.status === 402 ? "The provider requires billing or the free allowance is unavailable. No price was charged by this site." :
               upstream.status === 401 || upstream.status === 403 ? "The flight provider rejected the API key. Check the Cloudflare Secret." :
+              upstream.status === 400 || upstream.status === 422 ? "The provider rejected these search details. Check the dates, route, and passenger options." :
+              upstream.status === 404 ? "The configured flight search endpoint was not found." :
+              upstream.status === 429 ? "The provider temporarily rate-limited this request. Please wait and try again." :
               "The flight provider could not complete this search. Please try again later."
           }, status);
         }
