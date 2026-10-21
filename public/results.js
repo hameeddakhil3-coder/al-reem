@@ -74,7 +74,27 @@
         if (emptyText) emptyText.textContent = message;
         return;
       }
-      const itineraries = Array.isArray(data.itineraries) ? data.itineraries : [];
+      const receivedItineraries = Array.isArray(data.itineraries) ? data.itineraries : [];
+      // Remove only exact duplicate offers; different prices, flight times, or routes remain visible.
+      const seenOffers = new Set();
+      const itineraries = receivedItineraries.filter(item => {
+        const outbound = item.outbound || (Array.isArray(item.legs) ? item.legs[0] : {}) || {};
+        const segments = Array.isArray(outbound.segments) ? outbound.segments : [];
+        const key = JSON.stringify({
+          id: item.ignav_id || null,
+          carrier: outbound.carrier || outbound.airline || "",
+          price: item.price ? [item.price.amount, item.price.currency] : null,
+          segments: segments.map(segment => [
+            segment.departure_airport, segment.arrival_airport,
+            segment.departure_time_local || segment.departure_time,
+            segment.arrival_time_local || segment.arrival_time
+          ]),
+          selfTransfer: Boolean(item.requires_self_transfer)
+        });
+        if (seenOffers.has(key)) return false;
+        seenOffers.add(key);
+        return true;
+      });
       if (!itineraries.length) {
         if (emptyText) emptyText.textContent = lang === "ar" ? "لم يعثر المزوّد على عروض لهذه التفاصيل. جرّب تاريخًا أو مطارًا آخر." : "The provider returned no offers for these details. Try another date or airport.";
         return;
@@ -126,7 +146,7 @@
         const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
         const card = document.createElement("article"); card.className = "flight-result-card";
         const top = document.createElement("div"); top.className = "flight-card-top";
-        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; if (airlineLogoUrls[rawCarrier]) { const logoImage = document.createElement("img"); logoImage.src = airlineLogoUrls[rawCarrier]; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => logoImage.remove(); logo.replaceChildren(logoImage); }
+        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; if (airlineLogoUrls[rawCarrier]) { const logoImage = document.createElement("img"); logoImage.src = airlineLogoUrls[rawCarrier]; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => { logoImage.remove(); logo.textContent = carrier.initials; logo.classList.add("logo-fallback"); }; logo.replaceChildren(logoImage); }
         const airline = document.createElement("div"); airline.className = "airline-name";
         const heading = document.createElement("h3"); heading.textContent = lang === "ar" ? (carrier.ar || rawCarrier || "شركة طيران") : (rawCarrier || "Airline");
         const codeLine = document.createElement("span"); codeLine.className = "airline-subtitle"; codeLine.textContent = rawCarrier;
