@@ -81,7 +81,7 @@ export default {
               "The flight provider could not complete this search. Please try again later."
           }, status);
         }
-        const itineraries = Array.isArray(data.itineraries) ? data.itineraries : [];
+        const itineraries = Array.isArray(data.itineraries) ? data.itineraries : (Array.isArray(data.data?.itineraries) ? data.data.itineraries : (Array.isArray(data.results) ? data.results : (Array.isArray(data.data) ? data.data : [])));
         return json({
           origin: data.origin || origin,
           destination: data.destination || destination,
