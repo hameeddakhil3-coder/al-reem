@@ -328,3 +328,26 @@ body{background:#fff;letter-spacing:0}
 .booking-route-details small{font-size:11px;color:var(--muted)}
 .booking-flight-meta{padding-top:12px;border-top:1px solid #f0e8ea;color:var(--muted);font-size:12px;line-height:1.9}
 @media(max-width:520px){.booking-airline-head{grid-template-columns:42px minmax(0,1fr);gap:8px 10px}.booking-route-details strong{font-size:13px}.booking-route-details>span{font-size:14px}}
+
+/* Refined flight comparison card: concise times, dates, carrier and provider-supplied fares */
+.flight-card-top{grid-template-columns:46px minmax(0,1fr);grid-template-rows:auto auto;column-gap:12px;row-gap:5px}
+.flight-card-top .airline-logo{grid-column:1;grid-row:1 / span 2}
+.flight-card-top .airline-name{grid-column:2;grid-row:1}
+.flight-card-top .flight-number-badge{grid-column:2;grid-row:2;justify-self:start;max-width:100%}
+.flight-date{display:block;font-size:10px;color:var(--muted,#777);font-weight:500;line-height:1.35}
+.flight-time-block strong{font-variant-numeric:tabular-nums;white-space:nowrap}
+.flight-time-block>span:last-child{font-weight:600}
+.flight-route-middle{min-width:0}
+.flight-price{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.flight-result-card .airline-logo img{object-fit:contain}
+.flight-result-card .airline-logo.logo-fallback{font-size:13px;background:#fff8f9;color:#850d24;border-color:#ead6dc}
+@media(max-width:520px){
+ .flight-card-top{grid-template-columns:42px minmax(0,1fr);column-gap:10px}
+ .flight-card-top .airline-logo{width:42px;height:42px;flex-basis:42px}
+ .flight-number-badge{font-size:10px;padding:4px 7px}
+ .flight-date{font-size:9px}
+ .flight-route-line{grid-template-columns:minmax(0,1fr) minmax(64px,.68fr) minmax(0,1fr);gap:5px}
+ .flight-time-block strong{font-size:14px}
+ .flight-time-block span{font-size:10px}
+ .flight-price{font-size:17px}
+}
