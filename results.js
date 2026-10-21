@@ -117,8 +117,11 @@
         "Emirates":"https://commons.wikimedia.org/wiki/Special:FilePath/Emirates_logo.svg",
         "Turkish Airlines":"https://commons.wikimedia.org/wiki/Special:FilePath/Turkish_Airlines_logo_2019.svg",
         "Japan Airlines":"https://commons.wikimedia.org/wiki/Special:FilePath/Japan_Airlines_logo.svg",
+        "JAL":"https://commons.wikimedia.org/wiki/Special:FilePath/Japan_Airlines_logo.svg",
+        "Japan Airlines Co., Ltd.":"https://commons.wikimedia.org/wiki/Special:FilePath/Japan_Airlines_logo.svg",
         "All Nippon Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/All_Nippon_Airways_logo.svg",
         "ANA":"https://commons.wikimedia.org/wiki/Special:FilePath/All_Nippon_Airways_logo.svg",
+        "All Nippon Airways Co., Ltd.":"https://commons.wikimedia.org/wiki/Special:FilePath/All_Nippon_Airways_logo.svg",
         "Etihad Airways":"https://commons.wikimedia.org/wiki/Special:FilePath/Etihad_Airways_logo.svg",
         "EgyptAir":"https://commons.wikimedia.org/wiki/Special:FilePath/EgyptAir_Logo.svg"
       };
@@ -138,8 +141,11 @@
         "Pegasus Airlines": {ar:"طيران بيغاسوس", initials:"PC"},
         "Emirates": {ar:"طيران الإمارات", initials:"EK"},
 "Japan Airlines": {ar:"الخطوط الجوية اليابانية", initials:"JL"},
+        "JAL": {ar:"الخطوط الجوية اليابانية", initials:"JL"},
+        "Japan Airlines Co., Ltd.": {ar:"الخطوط الجوية اليابانية", initials:"JL"},
         "All Nippon Airways": {ar:"خطوط أول نيبون الجوية", initials:"NH"},
         "ANA": {ar:"خطوط أول نيبون الجوية", initials:"NH"},
+        "All Nippon Airways Co., Ltd.": {ar:"خطوط أول نيبون الجوية", initials:"NH"},
         "EgyptAir": {ar:"مصر للطيران", initials:"MS"},
       };
       const formatTime = value => {
@@ -166,7 +172,7 @@
           const number = segment.number || segment.flight_number_suffix || "";
           return airlineCode && number ? String(airlineCode) + String(number) : "";
         };
-        const flightNumbers = [...new Set(segments.map(segmentFlightNumber).filter(Boolean))];
+        const flightNumbers = [...new Set([...segments.map(segmentFlightNumber), segmentFlightNumber(outbound)].filter(Boolean))];
         const rawCarrier = String(outbound.carrier || outbound.airline || "");
         const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
         const card = document.createElement("article"); card.className = "flight-result-card";
