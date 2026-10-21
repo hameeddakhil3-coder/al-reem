@@ -8,9 +8,9 @@ function renderSelectedFlight(){
  const title=document.createElement("h2");title.textContent=lang==="ar"?"مراجعة الرحلة المختارة":"Review selected flight";
  const head=document.createElement("div");head.className="booking-airline-head";
  const logo=document.createElement("span");logo.className="airline-logo";logo.textContent=(q.get("airline").match(/\\b[A-Z]{1,3}\\b/)||["✈"])[0];
- if(logos[q.get("airline")]){const img=document.createElement("img");img.src=logos[q.get("airline")];img.alt="";img.loading="lazy";img.onerror=()=>{img.remove();};logo.replaceChildren(img);}
+ if(logos[q.get("airline")]){const img=document.createElement("img");img.src=logos[q.get("airline")];img.alt="";img.loading="lazy";img.onerror=()=>{img.remove();logo.textContent=(q.get("airline").match(/\\b[A-Z]{1,3}\\b/)||["✈"])[0];logo.classList.add("logo-fallback");};logo.replaceChildren(img);}
  const airline=document.createElement("strong");airline.textContent=lang==="ar"?(names[q.get("airline")]||q.get("airline")):q.get("airline");
- const flightNo=document.createElement("span");flightNo.className="flight-number-badge";flightNo.textContent=(lang==="ar"?"رقم الرحلة: ":"Flight number: ")+(q.get("flightNumber")||(lang==="ar"?"غير متوفر من المزوّد":"Not provided by provider"));
+ const flightNumbers=(q.get("flightNumber")||"").split("/").map(v=>v.trim()).filter(Boolean);const flightNo=document.createElement("span");flightNo.className="flight-number-badge";flightNo.textContent=(lang==="ar"?(flightNumbers.length>1?"أرقام مقاطع الرحلة: ":"رقم الرحلة: "):(flightNumbers.length>1?"Flight segments: ":"Flight number: "))+(flightNumbers.length?flightNumbers.join(" / "):(lang==="ar"?"غير متوفر من المزوّد":"Not provided by provider"));
  head.append(logo,airline,flightNo);
  const route=document.createElement("div");route.className="booking-route-timeline";
  const endpoint=(label,code,time,date)=>{const item=document.createElement("div");item.className="booking-route-stop";const marker=document.createElement("span");marker.className="booking-route-marker";const details=document.createElement("div");details.className="booking-route-details";const h=document.createElement("strong");h.textContent=label+(code?" ("+code+")":"");const t=document.createElement("span");t.textContent=time|| (lang==="ar"?"الوقت غير متاح":"Time unavailable");const dt=document.createElement("small");dt.textContent=date||"";details.append(h,t,dt);item.append(marker,details);return item;};
@@ -20,7 +20,7 @@ function renderSelectedFlight(){
  const meta=document.createElement("p");meta.className="booking-flight-meta";const parts=[];
  if(q.has("flightDuration")){const m=Number(q.get("flightDuration"));if(Number.isFinite(m))parts.push((lang==="ar"?"المدة: ":"Duration: ")+Math.floor(m/60)+(lang==="ar"?" س ":"h ")+(m%60)+(lang==="ar"?" د":"m"));}
  if(q.has("flightStops"))parts.push(q.get("flightStops")==="0"?(lang==="ar"?"رحلة مباشرة":"Nonstop"):(lang==="ar"?"عدد التوقفات: ":"Stops: ")+q.get("flightStops"));
- if(q.get("flightPrice")&&q.get("flightCurrency")){try{parts.push((lang==="ar"?"السعر المعروض: ":"Displayed fare: ")+new Intl.NumberFormat(lang==="ar"?"ar-IQ":"en-US",{style:"currency",currency:q.get("flightCurrency")}).format(Number(q.get("flightPrice"))));}catch{}}
+ if(q.get("flightPrice")&&q.get("flightCurrency")){const amount=Number(q.get("flightPrice"));if(Number.isFinite(amount))parts.push((lang==="ar"?"السعر المعروض: ":"Displayed fare: ")+new Intl.NumberFormat("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}).format(amount)+" "+q.get("flightCurrency").toUpperCase());}
  meta.textContent=parts.join(" · ");box.append(title,head,route,meta);
  if(q.get("flightSelfTransfer")==="1"){const w=document.createElement("p");w.className="flight-warning";w.textContent=lang==="ar"?"تنبيه: يتطلب المسار انتقالًا ذاتيًا بين الرحلات. راجع شروط الانتقال قبل المتابعة.":"Warning: this itinerary requires a self-transfer. Review transfer conditions before proceeding.";box.append(w);}
 }
