@@ -24,10 +24,7 @@
       </a>
       <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة" aria-expanded="false">☰</button>
       <nav class="main-nav" id="mainNav" aria-label="Main navigation">
-        <a href="#home" data-i18n="navHome">الرئيسية</a>
         <a href="#search" data-i18n="navFlights">الرحلات</a>
-        <a href="#destinations" data-i18n="navDestinations">الوجهات</a>
-        <a href="#why-us" data-i18n="navAbout">لماذا AL Reem؟</a>
       </nav>
       <div class="nav-actions">
         <button class="language-switch" id="languageToggle" type="button" aria-label="Switch language">EN</button>
@@ -39,28 +36,11 @@
   <main id="main">
     <section class="search-section" id="home">
       <div class="container search-container" id="search">
-        <div class="home-intro">
-          <div class="home-intro-copy">
-            <span class="section-kicker" data-i18n="eyebrow">خطّط لرحلتك بثقة</span>
-            <h1 data-i18n="heroTitle">العالم أقرب<br><em>مما تتخيّل.</em></h1>
-            <p data-i18n="heroDescription">ابدأ رحلتك القادمة بتجربة بحث بسيطة وواضحة، ودع فريق AL Reem يساعدك في متابعة طلب الحجز.</p>
-            <div class="home-intro-points">
-              <span><i aria-hidden="true">✓</i><b data-i18n="pointOne">خطوات واضحة</b></span>
-              <span><i aria-hidden="true">✓</i><b data-i18n="pointTwo">متابعة بشرية للطلبات</b></span>
-            </div>
-          </div>
-          <aside class="home-intro-note">
-            <span class="intro-note-mark" aria-hidden="true">✦</span>
-            <span class="section-kicker" data-i18n="noteKicker">مساحة جديدة لاكتشاف العالم</span>
-            <p data-i18n="noteText">رحلتك مهمة. نعمل على جعل التخطيط لها أكثر سهولة ووضوحًا.</p>
-            <span class="intro-note-footer">AL REEM <span>·</span> TRAVEL, WITH CLARITY</span>
-          </aside>
-        </div>
         <div class="search-card">
           <div class="search-heading">
             <div>
-              <span class="section-kicker" data-i18n="searchKicker">ابدأ من هنا</span>
-              <h2 data-i18n="searchTitle">إلى أين تأخذك رحلتك؟</h2>
+              <span class="section-kicker" data-i18n="searchKicker">ابحث بسهولة</span>
+              <h1 data-i18n="searchTitle">ابحث عن رحلتك</h1>
             </div>
             <span class="manual-badge"><span></span><span data-i18n="manualBadge">طلب حجز بمراجعة يدوية</span></span>
           </div>
@@ -75,7 +55,7 @@
                 <span data-i18n="fromLabel">من</span>
                 <input id="origin" name="origin" autocomplete="off" minlength="2" maxlength="120" required aria-describedby="formMessage" placeholder="مدينة أو مطار المغادرة" data-i18n-placeholder="fromPlaceholder"><div class="airport-suggestions" id="originSuggestions" role="listbox" hidden></div>
               </label>
-              <div class="route-swap" aria-hidden="true">⇄</div>
+              <button class="route-swap" id="swapAirports" type="button" aria-label="تبديل مطاري المغادرة والوصول" title="تبديل المسار">⇄</button>
               <label class="field">
                 <span data-i18n="toLabel">إلى</span>
                 <input id="destination" name="destination" autocomplete="off" minlength="2" maxlength="120" required aria-describedby="formMessage" placeholder="مدينة أو مطار الوصول" data-i18n-placeholder="toPlaceholder"><div class="airport-suggestions" id="destinationSuggestions" role="listbox" hidden></div>
