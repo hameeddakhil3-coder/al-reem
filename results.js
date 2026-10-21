@@ -84,33 +84,83 @@
       if (title) title.textContent = lang === "ar" ? "عروض الرحلات المتاحة" : "Available flight offers";
       const icon = document.querySelector(".results-empty .empty-icon");
       if (icon) icon.hidden = true;
+      const airlineNames = {
+        "Air Arabia": {ar:"العربية للطيران", initials:"AA"},
+        "SalamAir": {ar:"سلام إير", initials:"SA"},
+        "Qatar Airways": {ar:"الخطوط الجوية القطرية", initials:"QR"},
+        "Royal Jordanian": {ar:"الملكية الأردنية", initials:"RJ"},
+        "Iraqi": {ar:"الخطوط الجوية العراقية", initials:"IA"},
+        "Iraqi Airways": {ar:"الخطوط الجوية العراقية", initials:"IA"},
+        "Emirates": {ar:"طيران الإمارات", initials:"EK"},
+        "Etihad Airways": {ar:"الاتحاد للطيران", initials:"EY"},
+        "Turkish Airlines": {ar:"الخطوط الجوية التركية", initials:"TK"},
+        "flydubai": {ar:"فلاي دبي", initials:"FZ"},
+        "Pegasus Airlines": {ar:"طيران بيغاسوس", initials:"PC"}
+      };
+      const formatTime = value => {
+        if (!value) return "";
+        const d = new Date(value);
+        return Number.isNaN(d.getTime()) ? String(value).replace("T"," ") : new Intl.DateTimeFormat(lang === "ar" ? "ar-IQ" : "en-GB", {dateStyle:"medium",timeStyle:"short"}).format(d);
+      };
+      const minutesBetween = (a,b) => {
+        if (!a || !b) return null;
+        const x = new Date(a).getTime(), y = new Date(b).getTime();
+        if (!Number.isFinite(x) || !Number.isFinite(y) || y <= x) return null;
+        return Math.round((y-x)/60000);
+      };
+      const durationLabel = minutes => minutes == null ? "" : (lang === "ar" ? (Math.floor(minutes/60) ? Math.floor(minutes/60)+" س " : "")+(minutes%60 ? (minutes%60)+" د" : "") : Math.floor(minutes/60)+"h "+String(minutes%60).padStart(2,"0")+"m");
       container.replaceChildren(...itineraries.map((item) => {
-        const card = document.createElement("article");
-        card.className = "flight-result-card";
-        const heading = document.createElement("h3");
         const outbound = item.outbound || (Array.isArray(item.legs) ? item.legs[0] : {}) || {};
-        heading.textContent = outbound.carrier || (lang === "ar" ? "رحلة جوية" : "Flight");
-        const details = document.createElement("p");
         const segments = Array.isArray(outbound.segments) ? outbound.segments : [];
         const first = segments[0] || {};
         const last = segments[segments.length - 1] || {};
-        const route = (first.departure_airport || originValue) + " → " + (last.arrival_airport || destinationValue);
-        const time = first.departure_time_local ? " · " + first.departure_time_local.replace("T", " ") : "";
+        const rawCarrier = String(outbound.carrier || outbound.airline || "");
+        const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
+        const card = document.createElement("article"); card.className = "flight-result-card";
+        const top = document.createElement("div"); top.className = "flight-card-top";
+        const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials;
+        const airline = document.createElement("div"); airline.className = "airline-name";
+        const heading = document.createElement("h3"); heading.textContent = lang === "ar" ? (carrier.ar || rawCarrier || "شركة طيران") : (rawCarrier || "Airline");
+        const codeLine = document.createElement("span"); codeLine.className = "airline-subtitle"; codeLine.textContent = rawCarrier;
+        airline.append(heading); if (lang === "ar" && rawCarrier && rawCarrier !== carrier.ar) airline.append(codeLine);
+        top.append(logo,airline);
+        const routeLine = document.createElement("div"); routeLine.className = "flight-route-line";
+        const departure = document.createElement("div"); departure.className = "flight-time-block";
+        const departTime = document.createElement("strong"); departTime.textContent = first.departure_time_local ? formatTime(first.departure_time_local) : (lang === "ar" ? "موعد المغادرة غير متاح" : "Departure time unavailable");
+        const departAirport = document.createElement("span"); departAirport.textContent = first.departure_airport || originValue; departure.append(departTime,departAirport);
+        const middle = document.createElement("div"); middle.className = "flight-route-middle";
+        const duration = minutesBetween(first.departure_time_local || first.departure_time, last.arrival_time_local || last.arrival_time);
+        const durationText = document.createElement("span"); durationText.className = "flight-duration"; durationText.textContent = durationLabel(duration) || (lang === "ar" ? "المدة غير متاحة" : "Duration unavailable");
+        const line = document.createElement("span"); line.className = "flight-route-track"; line.setAttribute("aria-hidden","true");
         const stops = segments.length > 0 ? Math.max(0, segments.length - 1) : null;
-        const stopText = stops === null ? "" : (lang === "ar" ? " · " + (stops === 0 ? "مباشرة" : stops + " توقف") : " · " + (stops === 0 ? "Nonstop" : stops + " stop(s)"));
-        details.textContent = route + time + stopText;
-        const price = document.createElement("strong");
-        const amount = item.price && item.price.amount;
-        const currency = item.price && item.price.currency;
-        price.textContent = amount !== undefined && currency ? new Intl.NumberFormat(lang === "ar" ? "ar-IQ" : "en-US", { style: "currency", currency }).format(Number(amount)) : (lang === "ar" ? "السعر غير متاح" : "Price unavailable");
-        card.append(heading, details, price);
-        if (item.requires_self_transfer) {
-          const warning = document.createElement("p");
-          warning.textContent = lang === "ar" ? "تنبيه: يتطلب هذا المسار انتقالًا ذاتيًا بين الرحلات." : "Warning: this itinerary requires a self-transfer.";
-          card.append(warning);
-        }
+        const stopText = document.createElement("span"); stopText.className = "flight-stop-label";
+        stopText.textContent = stops === null ? (lang === "ar" ? "التوقفات غير محددة" : "Stops not provided") : stops === 0 ? (lang === "ar" ? "مباشرة" : "Nonstop") : (lang === "ar" ? stops+" توقف" : stops+" stop"+(stops>1?"s":""));
+        middle.append(durationText,line,stopText);
+        const arrival = document.createElement("div"); arrival.className = "flight-time-block flight-arrival";
+        const arriveTime = document.createElement("strong"); arriveTime.textContent = last.arrival_time_local ? formatTime(last.arrival_time_local) : (lang === "ar" ? "موعد الوصول غير متاح" : "Arrival time unavailable");
+        const arriveAirport = document.createElement("span"); arriveAirport.textContent = last.arrival_airport || destinationValue; arrival.append(arriveTime,arriveAirport); routeLine.append(departure,middle,arrival);
+        const bottom = document.createElement("div"); bottom.className = "flight-card-bottom";
+        const price = document.createElement("strong"); price.className = "flight-price";
+        const amount = item.price && item.price.amount, currency = item.price && item.price.currency;
+        price.textContent = amount !== undefined && currency ? new Intl.NumberFormat(lang === "ar" ? "ar-IQ" : "en-US", {style:"currency",currency}).format(Number(amount)) : (lang === "ar" ? "السعر غير متاح" : "Price unavailable");
+        const select = document.createElement("button"); select.type = "button"; select.className = "button button-primary flight-select"; select.textContent = lang === "ar" ? "اختيار هذه الرحلة" : "Select this flight";
+        select.addEventListener("click", () => {
+          const bookingParams = new URLSearchParams(location.search);
+          bookingParams.set("airline", rawCarrier);
+          if (item.ignav_id) bookingParams.set("flightId", String(item.ignav_id));
+          if (amount !== undefined) bookingParams.set("flightPrice", String(amount));
+          if (currency) bookingParams.set("flightCurrency", String(currency));
+          if (first.departure_time_local || first.departure_time) bookingParams.set("flightDeparture", String(first.departure_time_local || first.departure_time));
+          if (last.arrival_time_local || last.arrival_time) bookingParams.set("flightArrival", String(last.arrival_time_local || last.arrival_time));
+          if (duration !== null) bookingParams.set("flightDuration", String(duration));
+          if (stops !== null) bookingParams.set("flightStops", String(stops));
+          if (item.requires_self_transfer) bookingParams.set("flightSelfTransfer","1"); else bookingParams.delete("flightSelfTransfer");
+          location.href = "./booking.html?" + bookingParams.toString();
+        });
+        bottom.append(price,select); card.append(top,routeLine,bottom);
+        if (item.requires_self_transfer) { const warning = document.createElement("p"); warning.className = "flight-warning"; warning.textContent = lang === "ar" ? "تنبيه: يتطلب هذا المسار انتقالًا ذاتيًا بين الرحلات؛ راجع شروط الانتقال قبل المتابعة." : "Self-transfer required. Review transfer conditions before proceeding."; card.append(warning); }
         return card;
-      }));
+      }));;
     } catch {
       if (emptyText) emptyText.textContent = lang === "ar" ? "تعذّر الاتصال بخدمة البحث. تحقق من الاتصال وحاول مجددًا." : "Could not connect to flight search. Check your connection and try again.";
     }
