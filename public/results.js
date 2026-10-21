@@ -123,7 +123,7 @@
         const first = segments[0] || {};
         const last = segments[segments.length - 1] || {};
         const rawCarrier = String(outbound.carrier || outbound.airline || "");
-        const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
+        const carrier = airlineNames[rawCarrier] || {ar:rawCarrier,initials:rawCarrier.split(/\s+/).map(w=>w[0]).join("").slice(0,3).toUpperCase() || "✈"};
         const card = document.createElement("article"); card.className = "flight-result-card";
         const top = document.createElement("div"); top.className = "flight-card-top";
         const logo = document.createElement("div"); logo.className = "airline-logo"; logo.setAttribute("aria-hidden","true"); logo.textContent = carrier.initials; if (airlineLogoUrls[rawCarrier]) { const logoImage = document.createElement("img"); logoImage.src = airlineLogoUrls[rawCarrier]; logoImage.alt = ""; logoImage.loading = "lazy"; logoImage.onerror = () => logoImage.remove(); logo.replaceChildren(logoImage); }
