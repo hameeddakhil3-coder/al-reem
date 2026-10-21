@@ -312,3 +312,19 @@ body{background:#fff;letter-spacing:0}
  .flight-card-bottom{align-items:stretch;flex-direction:column}
  .flight-select{width:100%}
 }
+
+.booking-airline-head{display:grid;grid-template-columns:46px minmax(0,1fr);align-items:center;gap:8px 12px;margin-bottom:18px}
+.booking-airline-head .airline-logo{grid-row:1 / span 2}
+.booking-airline-head>strong{font-size:15px;margin:0}
+.booking-airline-head .flight-number-badge{grid-column:2;grid-row:2;justify-self:start}
+.booking-route-timeline{position:relative;display:grid;gap:0;padding-inline-start:4px;margin:4px 0 12px}
+.booking-route-timeline:before{content:"";position:absolute;inset-block:13px 15px;inset-inline-start:11px;width:2px;background:#e6dadd}
+.booking-route-stop{position:relative;display:grid;grid-template-columns:18px minmax(0,1fr);gap:12px;padding:7px 0 18px}
+.booking-route-stop:last-child{padding-bottom:5px}
+.booking-route-marker{position:relative;z-index:1;width:14px;height:14px;margin-top:5px;border:2px solid #b99aa3;background:#fff;border-radius:50%}
+.booking-route-details{display:grid;gap:3px}
+.booking-route-details strong{font-size:14px;color:var(--ink)}
+.booking-route-details>span{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--red-deep)}
+.booking-route-details small{font-size:11px;color:var(--muted)}
+.booking-flight-meta{padding-top:12px;border-top:1px solid #f0e8ea;color:var(--muted);font-size:12px;line-height:1.9}
+@media(max-width:520px){.booking-airline-head{grid-template-columns:42px minmax(0,1fr);gap:8px 10px}.booking-route-details strong{font-size:13px}.booking-route-details>span{font-size:14px}}
