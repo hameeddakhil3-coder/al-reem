@@ -8,10 +8,10 @@ const translations = {
     skip:"تجاوز إلى المحتوى",brandTag:"رحلتك تبدأ هنا",navHome:"الرئيسية",navAccount:"حسابي",navFlights:"الرحلات",navDestinations:"الوجهات",navAbout:"لماذا AL Reem؟",navContact:"تواصل معنا",
     eyebrow:"خطّط لرحلتك بثقة",heroTitle:"العالم أقرب<br><em>مما تتخيّل.</em>",heroDescription:"ابدأ رحلتك القادمة بتجربة بحث بسيطة وواضحة، ودع فريق AL Reem يساعدك في متابعة طلب الحجز.",
     pointOne:"خطوات واضحة",pointTwo:"متابعة بشرية للطلبات",noteKicker:"مساحة جديدة لاكتشاف العالم",noteText:"رحلتك مهمة. نعمل على جعل التخطيط لها أكثر سهولة ووضوحًا.",
-    searchKicker:"ابدأ من هنا",searchTitle:"إلى أين تأخذك رحلتك؟",manualBadge:"طلب حجز بمراجعة يدوية",tripType:"نوع الرحلة",roundTrip:"ذهاب وعودة",oneWay:"ذهاب فقط",
+    searchKicker:"ابحث بسهولة",searchTitle:"ابحث عن رحلتك",manualBadge:"طلب حجز بمراجعة يدوية",tripType:"نوع الرحلة",roundTrip:"ذهاب وعودة",oneWay:"ذهاب فقط",
     fromLabel:"من",toLabel:"إلى",departLabel:"تاريخ المغادرة",returnLabel:"تاريخ العودة",passengersLabel:"المسافرون",cabinLabel:"درجة السفر",
     fromPlaceholder:"مدينة أو مطار المغادرة",toPlaceholder:"مدينة أو مطار الوصول",economy:"اقتصادية",business:"رجال الأعمال",first:"الأولى",
-    formHint:"هذا النموذج يجهّز طلب بحث فقط؛ لم يتم ربط مزود رحلات حتى الآن.",searchButton:"متابعة طلب الرحلة",
+    formHint:"هذا النموذج يجهّز طلب بحث فقط؛ لم يتم ربط مزود رحلات حتى الآن.",searchButton:"ابحث عن الرحلات",
     destKicker:"وجهات سياحية شهيرة",destTitle:"وجهات تستحق الاكتشاف",destDescription:"اكتشف وجهات يحب المسافرون زيارتها. هذه بطاقات إلهامية وليست عروضًا أو أسعارًا متاحة للحجز.",
     destLabel:"وجهة للإلهام",istanbul:"إسطنبول",istanbulDesc:"بين التاريخ والحياة الحديثة",dubai:"دبي",dubaiDesc:"تجارب مدينة لا تتوقف",paris:"باريس",parisDesc:"فنّ وثقافة وأجواء مميزة",
     destDisclaimer:"الوجهات مقترحة للإلهام؛ لا تمثل بيانات حجوزات فعلية أو توافر رحلات.",whyKicker:"تجربة أوضح من البداية",whyTitle:"كل خطوة<br><em>لها معنى.</em>",
@@ -26,10 +26,10 @@ const translations = {
     skip:"Skip to content",brandTag:"Your journey starts here",navHome:"Home",navAccount:"My account",navFlights:"Flights",navDestinations:"Destinations",navAbout:"Why AL Reem?",navContact:"Contact",
     eyebrow:"Plan your journey with confidence",heroTitle:"The world is closer<br><em>than you think.</em>",heroDescription:"Start your next journey with a clear, simple search experience. AL Reem is being built to help you follow your booking request.",
     pointOne:"Clear steps",pointTwo:"Human-reviewed requests",noteKicker:"A new way to discover the world",noteText:"Your journey matters. We're working to make planning it clearer and easier.",
-    searchKicker:"Start here",searchTitle:"Where will your journey take you?",manualBadge:"Booking requests reviewed manually",tripType:"Trip type",roundTrip:"Round trip",oneWay:"One way",
+    searchKicker:"Search with ease",searchTitle:"Find your flight",manualBadge:"Booking requests reviewed manually",tripType:"Trip type",roundTrip:"Round trip",oneWay:"One way",
     fromLabel:"From",toLabel:"To",departLabel:"Departure date",returnLabel:"Return date",passengersLabel:"Travelers",cabinLabel:"Cabin class",
     fromPlaceholder:"Departure city or airport",toPlaceholder:"Arrival city or airport",economy:"Economy",business:"Business",first:"First",
-    formHint:"This form only prepares a search request. No flight provider is connected yet.",searchButton:"Continue trip request",
+    formHint:"This form only prepares a search request. No flight provider is connected yet.",searchButton:"Search flights",
     destKicker:"Popular destinations",destTitle:"Places worth discovering",destDescription:"Explore destinations travelers love to visit. These cards are inspiration, not bookable offers or live prices.",
     destLabel:"Destination inspiration",istanbul:"Istanbul",istanbulDesc:"Where history meets modern life",dubai:"Dubai",dubaiDesc:"A city of endless experiences",paris:"Paris",parisDesc:"Art, culture and distinctive charm",
     destDisclaimer:"Destinations are suggestions for inspiration; they do not represent actual booking data or flight availability.",whyKicker:"A clearer experience from day one",whyTitle:"Every step<br><em>has a purpose.</em>",
@@ -291,6 +291,7 @@ function initializeApp() {
   });
   document.querySelectorAll('input[name="tripType"]').forEach((input) => input.addEventListener("change", updateTripType));
   document.getElementById("flightSearchForm").addEventListener("submit", handleFlightSearch);
+  document.getElementById("swapAirports").addEventListener("click", () => { const origin = document.getElementById("origin"); const destination = document.getElementById("destination"); const value = origin.value; origin.value = destination.value; destination.value = value; origin.dispatchEvent(new Event("input", { bubbles: true })); destination.dispatchEvent(new Event("input", { bubbles: true })); });
   setupAirportAutocomplete("origin", "originSuggestions");
   setupAirportAutocomplete("destination", "destinationSuggestions");
   document.getElementById("languageToggle").addEventListener("click", () => setLanguage(currentLanguage === "ar" ? "en" : "ar"));
