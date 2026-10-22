@@ -56,7 +56,7 @@
           return_date: tripValue === "round" ? returnValue : undefined,
           adults: Math.min(9, Math.max(1, Number(params.get("passengers")) || 1)),
           cabin_class: params.get("cabin") || "economy",
-          market: "US"
+          market: "IQ"
         })
       });
       const data = await response.json().catch(() => ({}));
